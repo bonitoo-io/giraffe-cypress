@@ -1,0 +1,14 @@
+{
+  "name": "giraffe-cypress-tests",
+  "version": "0.0.1",
+  "description": "tests for the giraffe cypress framework",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "open": "cypress open",
+    "run": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^5.3.0"
+  }
+}

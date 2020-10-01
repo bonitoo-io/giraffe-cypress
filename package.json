@@ -1,0 +1,13 @@
+{
+  "name": "giraffe-cypress",
+  "version": "0.0.1",
+  "description": "Cypress tests for Giraffe ",
+  "main": "index.js",
+  "private": true,
+  "repository": "git@github.com:bonitoo-io/giraffe-cypress.git",
+  "author": "karel-rehor <karel.k.rehor@email.cz>",
+  "license": "MIT",
+  "workspaces": [ "app", "tests"],
+  "dependencies": {},
+  "devDependencies": {}
+}
