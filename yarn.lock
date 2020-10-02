@@ -1058,6 +1058,11 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@influxdata/influxdb-client@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@influxdata/influxdb-client/-/influxdb-client-1.7.0.tgz#42e5ec002eff8c59182cb52765b7f94dac382a56"
+  integrity sha512-Qa4vV5W2NroETreVA2wvVlfZV12sda5S7Z57Kn5/5J4XDhglrFo5IOWbvEne+ROgPCvZ1ufHdrdbjobm+n0BSg==
+
 "@next/react-dev-overlay@9.5.3":
   version "9.5.3"
   resolved "https://registry.yarnpkg.com/@next/react-dev-overlay/-/react-dev-overlay-9.5.3.tgz#3275301f08045ecc709e3273031973a1f5e81427"
