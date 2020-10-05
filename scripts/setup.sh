@@ -15,7 +15,11 @@ DIST="local"
 APP_BUILD="dev"
 APP_LOG_FILE="${PRJ_ROOT}/app/next.log"
 
-#mkdir -p "$PRJ_ROOT/$INFLUX_DIR"
+INFLUX_DOCKER_IMAGE="quay.io/influxdb/influx:nightly"
+INFLUX_INSTANCE_NAME="influx2_solo"
+INFLUX_HOME="${HOME}/.influxdbv2"
+INFLUX_LOG_DIR=${PRJ_ROOT}/scripts/log
+INFLUX_LOG_FILE=${INFLUX_LOG_DIR}/docker.log
 
 make_influx_dir(){
 
@@ -147,7 +151,10 @@ create_app(){
        exit 1
    fi
 
-   #TODO install influxdb OSS from nightly
+   run_docker_influx
+   #TODO better wait
+   sleep 10
+   setup_docker_influx
 
    cd ${PRJ_ROOT}/app
 
@@ -164,12 +171,43 @@ create_app(){
        echo "exit_status ${exit_status}"
    fi
 
+   cd -
 }
 
 kill_next_hard(){
    echo "====== Shutting Down Nextjs Hard ======"
 # TODO find better way to manage next server shutdown
    killall -q -SIGKILL node
+}
+
+run_docker_influx(){
+   echo "======== Installing Influxdbv2 Docker ===="
+   mkdir -p ${INFLUX_LOG_DIR}
+   echo "["$(date +"%d.%m.%Y %T")"] starting docker instance ${INFLUX_INSTANCE_NAME}"
+   sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
+   echo "["$(date +"%d.%m.%Y %T")"] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
+   echo "logfile at $INFLUX_LOG_FILE"
+   sleep 5
+   tail -n32 ${INFLUX_LOG_FILE}
+}
+
+setup_docker_influx(){
+  echo "======== Setting up Influxdbv2 Docker ===="
+  # TODO setup initial user
+  source ${PRJ_ROOT}/scripts/influx_env.sh
+  echo "INFLUX_USERNAME ${INFLUX_USERNAME}"
+  echo "INFLUX_ORG ${INFLUX_ORG}"
+  echo "INFLUX_BUCKET ${INFLUX_BUCKET}"
+  sudo docker exec influx2_solo influx setup -u ${INFLUX_USERNAME} -p ${INFLUX_PASSWORD} \
+                               -o ${INFLUX_ORG} -b ${INFLUX_BUCKET} -t ${INFLUX_TOKEN} -f
+  exit_status=$?
+  echo ${exit_status}
+}
+
+stop_docker_influx(){
+   echo "======== Stopping Influxdbv2 Docker ===="
+   sudo docker stop ${INFLUX_INSTANCE_NAME}
+   sudo docker rm ${INFLUX_INSTANCE_NAME}
 }
 
 return_home(){
@@ -246,6 +284,7 @@ case $ACTION in
                  clean_influx_dir
                  ;;
    shutdown )    kill_next_hard
+                 stop_docker_influx
                  ;;
    * )           echo "Unhandled Action $ACTION"
 esac
