@@ -13,6 +13,7 @@ ACTION="create"
 DIST="local"
 # TYPE can be "dev" or "prod" e.g. production
 APP_BUILD="dev"
+APP_LOG_FILE="${PRJ_ROOT}/app/next.log"
 
 #mkdir -p "$PRJ_ROOT/$INFLUX_DIR"
 
@@ -152,28 +153,23 @@ create_app(){
 
    if [[ "${APP_BUILD}" = "dev" ]]; then
        echo "======== Running in Dev Mode ===="
-       yarn dev 2>&1 > ${PRJ_ROOT}/app/next.log &
+       yarn dev 2>&1 > ${APP_LOG_FILE} &
        echo $!
    elif [[  "${APP_BUILD}" = "prod" ]]; then
        echo "======== Running in Production Mode ===="
 
        yarn build
-       #TODO run in background - see if hard kill works here too
-       yarn start
+       yarn start 2>&1 > ${APP_LOG_FILE} &
+       exit_status=$?
+       echo "exit_status ${exit_status}"
    fi
 
 }
 
 kill_next_hard(){
+   echo "====== Shutting Down Nextjs Hard ======"
 # TODO find better way to manage next server shutdown
-   sleep 3
-   LINE=$(ps -x | grep node.*next)
-   NEXT_PID=$(ps -x | grep node.*next | awk '{ print $1; }' | head -n 1)
-   #NEXT_PID=$(ps -x | grep node.*next | awk '{ print $1; }' )
-   echo NEXT_PID ${NEXT_PID}
-   echo LINE ${LINE}
-   sleep 27
-   kill ${NEXT_PID}
+   killall -q -SIGKILL node
 }
 
 return_home(){
@@ -187,6 +183,7 @@ usage(){
    echo "Commands:"
    echo "   create    Create the application. Default command."
    echo "   clean     Clean the application"
+   echo "   shutdown  Shutdown the application"
    echo ""
    echo "Options:"
    echo "   -d | --dist    Giraffe distribution to use ('local', local build | 'release', node release)"
@@ -205,6 +202,8 @@ while [ "$1" != "" ]; do
       create )         ACTION="create"
                        ;;
       clean )          ACTION="clean"
+                       ;;
+      shutdown )       ACTION="shutdown"
                        ;;
       -d | --dist )    shift
                        DIST=$1
@@ -245,6 +244,8 @@ case $ACTION in
    clean )       echo "====== Cleaning App ======"
                  remove_giraffe_from_app
                  clean_influx_dir
+                 ;;
+   shutdown )    kill_next_hard
                  ;;
    * )           echo "Unhandled Action $ACTION"
 esac
