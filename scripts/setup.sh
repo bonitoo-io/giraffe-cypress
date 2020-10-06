@@ -288,3 +288,5 @@ case $ACTION in
                  ;;
    * )           echo "Unhandled Action $ACTION"
 esac
+
+# TODO clean logs
