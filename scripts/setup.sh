@@ -36,7 +36,7 @@ make_influx_dir(){
 clean_influx_dir(){
 
    echo "======== Deleting Influxdata Dir ===="
-   cd $PRJ_ROOT
+   cd $PRJ_ROOT || echo "Failed to cd to ${PRJ_ROOT}"
    rm -rdf $INFLUX_DIR
    echo "Removed $INFLUX_DIR"
 }
@@ -65,7 +65,7 @@ build_giraffe(){
   echo "======== Building Giraffe ===="
   echo "target branch $GIRAFFE_GITHUB_BRANCH"
   if [[ -d $INFLUX_DIR_ABS/giraffe/giraffe ]]; then
-     cd ${INFLUX_DIR_ABS}/giraffe/giraffe
+     cd ${INFLUX_DIR_ABS}/giraffe/giraffe || echo "failed to cd ${INFLUX_DIR_ABS}/giraffe/giraffe"
      git checkout $GIRAFFE_GITHUB_BRANCH
      yarn
      yarn build
@@ -84,7 +84,7 @@ build_giraffe(){
 remove_giraffe_from_app(){
 
   echo "======== Removing Giraffe from Project ===="
-  cd ${PRJ_ROOT}/app
+  cd ${PRJ_ROOT}/app || echo "failed to cd ${PRJ_ROOT}/app"
   yarn remove "@influxdata/giraffe"
 
 }
@@ -93,7 +93,7 @@ add_local_giraffe_to_app(){
 
   echo "======== Adding Giraffe to Project ===="
   if [[ -d $INFLUX_DIR_ABS/giraffe/giraffe/dist ]]; then
-     cd ${PRJ_ROOT}/app
+     cd ${PRJ_ROOT}/app || echo "failed to cd ${PRJ_ROOT}/app"
      yarn add file:${INFLUX_DIR_ABS}/giraffe/giraffe
   else
      echo Local giraffe $INFLUX_DIR_ABS/giraffe/giraffe/dist not found.  Not added to package.json.
@@ -115,7 +115,7 @@ add_giraffe_dist_to_app(){
 
      echo "GIRAFFE CHECKOUT ${GIRAFFE_CHECKOUT}"
 
-     cd ${PRJ_ROOT}/app
+     cd ${PRJ_ROOT}/app || exit 1
      yarn add ${GIRAFFE_CHECKOUT}
      exit_status=$?
      if [[ ${exit_status} -eq 0 ]]; then
@@ -132,6 +132,8 @@ create_from_local(){
    clone_giraffe
    build_giraffe
    add_local_giraffe_to_app
+   build_data_module
+   add_data_module_to_app
    return_home
 }
 
@@ -156,22 +158,24 @@ create_app(){
    sleep 10
    setup_docker_influx
 
-   cd ${PRJ_ROOT}/app
+   cd ${PRJ_ROOT}/app || exit 1
+
+   #export FOO=BARBAR;
 
    if [[ "${APP_BUILD}" = "dev" ]]; then
        echo "======== Running in Dev Mode ===="
-       yarn dev 2>&1 > ${APP_LOG_FILE} &
+       yarn dev > ${APP_LOG_FILE} 2>&1 &
        echo $!
    elif [[  "${APP_BUILD}" = "prod" ]]; then
        echo "======== Running in Production Mode ===="
 
        yarn build
-       yarn start 2>&1 > ${APP_LOG_FILE} &
+       yarn start > ${APP_LOG_FILE} 2>&1 &
        exit_status=$?
        echo "exit_status ${exit_status}"
    fi
 
-   cd -
+   cd - || exit 1
 }
 
 kill_next_hard(){
@@ -183,9 +187,9 @@ kill_next_hard(){
 run_docker_influx(){
    echo "======== Installing Influxdbv2 Docker ===="
    mkdir -p ${INFLUX_LOG_DIR}
-   echo "["$(date +"%d.%m.%Y %T")"] starting docker instance ${INFLUX_INSTANCE_NAME}"
+   echo "[$(date +"%d.%m.%Y %T")] starting docker instance ${INFLUX_INSTANCE_NAME}"
    sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
-   echo "["$(date +"%d.%m.%Y %T")"] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
+   echo "[$(date +"%d.%m.%Y %T")] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
    echo "logfile at $INFLUX_LOG_FILE"
    sleep 5
    tail -n32 ${INFLUX_LOG_FILE}
@@ -210,8 +214,40 @@ stop_docker_influx(){
    sudo docker rm ${INFLUX_INSTANCE_NAME}
 }
 
+build_data_module(){
+  echo "======== Building Data Module ===="
+  pwd
+  cd ${PRJ_ROOT}/data || echo "Failed to cd to ${PRJ_ROOT}/data"
+  pwd
+  yarn build || echo "Failed to build data"
+  return_home
+}
+
+add_data_module_to_app(){
+  echo "======== Adding Data Module to App===="
+  cd ${PRJ_ROOT}/app || echo "Failed to cd to ${PRJ_ROOT}/app"
+  yarn remove giraffe-cypress-data
+  yarn add file:${PRJ_ROOT}/data/ || echo "Failed to add data module"
+  return_home
+}
+
+add_data_module_to_tests(){
+  echo "======== Adding Data Module to Tests ==== "
+  cd ${PRJ_ROOT}/tests || echo "Failed to cd to ${PRJ_ROOT}/tests"
+  yarn remove giraffe-cypress-data
+  yarn add file:${PRJ_ROOT}/data/ || echo "Failed to add data module"
+  return_home
+}
+
+remove_data_module(){
+  cd ${PRJ_ROOT}/app || echo "Failed to cd to ${PRJ_ROOT}/app"
+  yarn remove giraffe-cypress-data
+  cd ${PRJ_ROOT}/tests || echo "Failed to cd to ${PRJ_ROOT}/tests"
+  yarn remove giraffe-cypress-data
+}
+
 return_home(){
-   cd ${PRJ_ROOT}
+   cd ${PRJ_ROOT} || echo "Failed to cd to ${PRJ_ROOT}"
 }
 
 usage(){
@@ -222,6 +258,7 @@ usage(){
    echo "   create    Create the application. Default command."
    echo "   clean     Clean the application"
    echo "   shutdown  Shutdown the application"
+   echo "   data      Rebuild data module    "
    echo ""
    echo "Options:"
    echo "   -d | --dist    Giraffe distribution to use ('local', local build | 'release', node release)"
@@ -242,6 +279,8 @@ while [ "$1" != "" ]; do
       clean )          ACTION="clean"
                        ;;
       shutdown )       ACTION="shutdown"
+                       ;;
+      data )           ACTION="data"
                        ;;
       -d | --dist )    shift
                        DIST=$1
@@ -282,9 +321,14 @@ case $ACTION in
    clean )       echo "====== Cleaning App ======"
                  remove_giraffe_from_app
                  clean_influx_dir
+                 remove_data_module
                  ;;
    shutdown )    kill_next_hard
                  stop_docker_influx
+                 ;;
+   data)         build_data_module
+                 add_data_module_to_app
+                 add_data_module_to_tests
                  ;;
    * )           echo "Unhandled Action $ACTION"
 esac

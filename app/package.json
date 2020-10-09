@@ -2,7 +2,7 @@
   "name": "giraffe-cypress-framework",
   "version": "0.0.1",
   "description": "framework for hanging giraffe components to be tested",
-  "main": "index.js",
+  "main": "pages/index.tsx",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",

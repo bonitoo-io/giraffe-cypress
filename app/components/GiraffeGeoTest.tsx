@@ -4,6 +4,7 @@ import {Plot,
     newTable,
     Table,
     fromFlux,
+    fromRows,
     Config,
     LineLayerConfig,
     GeoLayerConfig} from '@influxdata/giraffe'
@@ -71,10 +72,14 @@ export const PlotContainer = ({children}) => (
     </div>
 )
 
-function GiraffeGeoTest(){
+function GiraffeGeoTest({data}){
+
+    console.log("DEBUG GeoTest data " + data);
+    console.log("DEBUG fromRows " + JSON.stringify(fromRows(data)))
 
     const config: Config = {
-        table: geoTable(),
+        //table: geoTable(),
+        table: fromRows(data),
         showAxes: false,
         layers: [
             {
@@ -87,13 +92,13 @@ function GiraffeGeoTest(){
                 layers: [
                     {
                         type: 'circleMap',
-                        radiusField: 'magnitude',
-                        radiusDimension: {label: 'Magnitude'},
-                        colorDimension: {label: 'Duration'},
-                        colorField: 'duration',
+                        radiusField: 'mag',
+                        radiusDimension: {label: 'Mag'},
+                        colorDimension: {label: 'Dur'},
+                        colorField: 'dur',
                         colors: [
-                            {type: 'min', hex: '#ff00b3'},
-                            {value: 50, hex: '#343aeb'},
+                            {type: 'min', hex: '#ff8808'},
+                            {value: 50, hex: '#ff0888'},
                             {type: 'max', hex: '#343aeb'},
                         ],
                     },

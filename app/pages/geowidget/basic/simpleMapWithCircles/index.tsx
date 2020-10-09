@@ -4,7 +4,22 @@ import dynamic from 'next/dynamic'
 
 const GiraffeGeoTest = dynamic(() => {return import('../../../../components/GiraffeGeoTest')},{ssr: false});
 
-export default function Home(){
+export async function getServerSideProps(){
+
+    const res = await fetch(`http://localhost:3000/api/influx/query`)
+
+    console.log("DEBUG GeoTest res " + res);
+
+    //const data = {}
+    const data = await res.json();
+
+    console.log("DEBUG GeoTest getServerSideProps Data: " + JSON.stringify(data));
+    return {props: {data} }
+}
+
+
+
+export default function Home({data}){
 
     return(
         <div>
@@ -14,7 +29,7 @@ export default function Home(){
             <section>
                 <p>Preparing to test Simple Map With Circles</p>
                 <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: "601px"}}>
-                    <GiraffeGeoTest />
+                    <GiraffeGeoTest data={data}/>
                 </div>
 
             </section>

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "module": "commonjs"
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.js"
+  ]
+}

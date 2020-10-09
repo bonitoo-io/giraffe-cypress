@@ -7,7 +7,15 @@
   "repository": "git@github.com:bonitoo-io/giraffe-cypress.git",
   "author": "karel-rehor <karel.k.rehor@email.cz>",
   "license": "MIT",
-  "workspaces": [ "app", "tests"],
-  "dependencies": {},
-  "devDependencies": {}
+  "workspaces": [
+    "app",
+    "tests",
+    "data"
+  ],
+  "dependencies": {
+    "ts-node": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.10.0"
+  }
 }
