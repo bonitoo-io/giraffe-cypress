@@ -191,6 +191,7 @@ run_docker_influx(){
    sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
    echo "[$(date +"%d.%m.%Y %T")] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
    echo "logfile at $INFLUX_LOG_FILE"
+   # TODO better wait for Influx to start
    sleep 5
    tail -n32 ${INFLUX_LOG_FILE}
 }
@@ -259,6 +260,7 @@ usage(){
    echo "   clean     Clean the application"
    echo "   shutdown  Shutdown the application"
    echo "   data      Rebuild data module    "
+   echo "   influx    Reset influx docker backend"
    echo ""
    echo "Options:"
    echo "   -d | --dist    Giraffe distribution to use ('local', local build | 'release', node release)"
@@ -281,6 +283,8 @@ while [ "$1" != "" ]; do
       shutdown )       ACTION="shutdown"
                        ;;
       data )           ACTION="data"
+                       ;;
+      influx )         ACTION="influx"
                        ;;
       -d | --dist )    shift
                        DIST=$1
@@ -325,6 +329,10 @@ case $ACTION in
                  ;;
    shutdown )    kill_next_hard
                  stop_docker_influx
+                 ;;
+   influx )      stop_docker_influx
+                 run_docker_influx
+                 setup_docker_influx
                  ;;
    data)         build_data_module
                  add_data_module_to_app
