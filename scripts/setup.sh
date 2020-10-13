@@ -247,6 +247,22 @@ remove_data_module(){
   yarn remove giraffe-cypress-data
 }
 
+reporting_setup(){
+  echo "======== Linking Reporting Libraries to Test Module ===="
+  if [[ ! -L ${PRJ_ROOT}/tests/node_modules/cypress-multi-reporters ]]; then
+    echo "============ Linking Cypress Multi Reporters ===="
+    ln -s ${PRJ_ROOT}/node_modules/cypress-multi-reporters ${PRJ_ROOT}/tests/node_modules/cypress-multi-reporters
+  else
+    echo "======== Cypress Multi Reporters Already Linked ===="
+  fi
+  if [[ ! -L ${PRJ_ROOT}/tests/node_modules/mochawesome ]]; then
+    echo "============ Linking Mochawesome ===="
+    ln -s ${PRJ_ROOT}/node_modules/mochawesome ${PRJ_ROOT}/tests/node_modules/mochawesome
+  else
+    echo "======== Mochawesome Already Linked ===="
+  fi
+}
+
 return_home(){
    cd ${PRJ_ROOT} || echo "Failed to cd to ${PRJ_ROOT}"
 }
@@ -261,6 +277,7 @@ usage(){
    echo "   shutdown  Shutdown the application"
    echo "   data      Rebuild data module    "
    echo "   influx    Reset influx docker backend"
+   echo "   reporting Setup linked directories for cypress reporting - used in test scripts"
    echo ""
    echo "Options:"
    echo "   -d | --dist    Giraffe distribution to use ('local', local build | 'release', node release)"
@@ -285,6 +302,8 @@ while [ "$1" != "" ]; do
       data )           ACTION="data"
                        ;;
       influx )         ACTION="influx"
+                       ;;
+      reporting )      ACTION="reporting"
                        ;;
       -d | --dist )    shift
                        DIST=$1
@@ -333,6 +352,8 @@ case $ACTION in
    influx )      stop_docker_influx
                  run_docker_influx
                  setup_docker_influx
+                 ;;
+   reporting )   reporting_setup
                  ;;
    data)         build_data_module
                  add_data_module_to_app

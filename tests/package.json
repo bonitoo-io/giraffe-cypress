@@ -5,11 +5,26 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "open": "cypress open",
-    "run": "cypress run"
+    "rep:merge": "mkdir -p site; mochawesome-merge site/mochawesome/*.json > site/output.json",
+    "rep:awesome": "marge --reportDir site/mochawesome-html-report -t Giraffe_Cypress_Tests -p Cypress_HMTL_Report -f Cypress_HMTL_Report --charts true site/output.json",
+    "rep:setup": "../scripts/setup.sh reporting",
+    "rep:clean": "rm -rdf cypress/screenshots/; rm -rdf cypress/videos; rm -rdf site",
+    "rep:junit": "utils/junit-merge.js -s site/junit/ -o site/test-results.xml",
+    "scr:check": "ls -al ..",
+    "cy:open": "cypress open",
+    "cy:run": "yarn rep:setup && yarn rep:clean && cypress run",
+    "cy:reports": "yarn rep:junit; yarn rep:merge; yarn rep:awesome",
+    "cy:all": "yarn cy:run; yarn cy:reports"
   },
   "devDependencies": {
-    "cypress": "^5.3.0"
+    "cypress": "^5.3.0",
+    "cypress-multi-reporters": "^1.4.0",
+    "junit-report-merger": "^0.0.6",
+    "mocha": "^8.1.3",
+    "mocha-junit-reporter": "^2.0.0",
+    "mochawesome": "^6.1.1",
+    "mochawesome-merge": "^4.2.0",
+    "mochawesome-report-generator": "^5.1.0"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.7.0",
