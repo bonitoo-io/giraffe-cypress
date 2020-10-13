@@ -14,7 +14,8 @@
     "cy:open": "cypress open",
     "cy:run": "yarn rep:setup && yarn rep:clean && cypress run",
     "cy:reports": "yarn rep:junit; yarn rep:merge; yarn rep:awesome",
-    "cy:all": "yarn cy:run; yarn cy:reports"
+    "cy:all": "yarn cy:run; yarn cy:reports",
+    "cy:clean": "echo TODO script cy:clean"
   },
   "devDependencies": {
     "cypress": "^5.3.0",
