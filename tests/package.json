@@ -9,7 +9,7 @@
     "rep:awesome": "marge --reportDir site/mochawesome-html-report -t Giraffe_Cypress_Tests -p Cypress_HMTL_Report -f Cypress_HMTL_Report --charts true site/output.json",
     "rep:setup": "../scripts/setup.sh reporting",
     "rep:clean": "rm -rdf cypress/screenshots/; rm -rdf cypress/videos; rm -rdf site",
-    "rep:junit": "utils/junit-merge.js -s site/junit/ -o site/test-results.xml",
+    "rep:junit": "utils/junit-merge.ts -s site/junit/ -o site/test-results.xml",
     "scr:check": "ls -al ..",
     "cy:open": "cypress open",
     "cy:run": "yarn rep:setup && yarn rep:clean && cypress run",
@@ -30,6 +30,7 @@
   "dependencies": {
     "@influxdata/influxdb-client": "^1.7.0",
     "@types/node": "^14.11.5",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   }
 }
