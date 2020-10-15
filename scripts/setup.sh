@@ -3,8 +3,10 @@
 PRJ_ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
 INFLUX_DIR=influxdata
 INFLUX_DIR_ABS="$PRJ_ROOT/$INFLUX_DIR"
-GIRAFFE_GITHUB_URL="https://github.com/dubsky/giraffe.git"
-GIRAFFE_GITHUB_BRANCH="feat/geo"
+#GIRAFFE_GITHUB_URL="https://github.com/dubsky/giraffe.git"
+GIRAFFE_GITHUB_URL="https://github.com/influxdata/giraffe.git"
+#GIRAFFE_GITHUB_BRANCH="feat/geo"
+GIRAFFE_GITHUB_BRANCH="master"
 GIRAFFE_DIST="@influxdata/giraffe"
 GIRAFFE_VERSION=""
 GIRAFFE_TAG=""
@@ -198,7 +200,8 @@ run_docker_influx(){
 
 setup_docker_influx(){
   echo "======== Setting up Influxdbv2 Docker ===="
-  # TODO setup initial user
+  # sometimes seems to overrun booting from run - so wait a bit
+  sleep 5
   source ${PRJ_ROOT}/scripts/influx_env.sh
   echo "INFLUX_USERNAME ${INFLUX_USERNAME}"
   echo "INFLUX_ORG ${INFLUX_ORG}"
