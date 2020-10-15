@@ -26,9 +26,9 @@ export default function Home({data}){
             <Head>
                 <title>Simple Map With Circles</title>
             </Head>
-            <section>
-                <p>Preparing to test Simple Map With Circles</p>
-                <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: "601px"}}>
+            <section style={{height:"608px", width: "608px" }}>
+                <p>Simple Map With Circles</p>
+                <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}>
                     <GiraffeGeoTest data={data}/>
                 </div>
 
