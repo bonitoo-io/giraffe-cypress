@@ -157,7 +157,12 @@ create_app(){
 
    run_docker_influx
    #TODO better wait
-   sleep 10
+   timeout 30 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8086
+   exit_status=$?
+   if [[  ${exit_status} -ne 0 ]]; then
+     echo "Influx Docker FAILED to start in 30 seconds.  Default user not created."
+     exit 1
+   fi
    setup_docker_influx
 
    cd ${PRJ_ROOT}/app || exit 1
