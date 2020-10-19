@@ -68,13 +68,31 @@ export async function addTimestampToRecsFromFile(filePath: string, timeDif: stri
 
     lines.forEach((line) => {
         if (line.trim().length > 0) {
-            console.log("DEBUG LINE " + line);
             result.push(line + " " + timeStamp);
         }
     })
 
     return result;
 }
+
+// noinspection DuplicatedCode
+export async function addTimestampToRecs(recs: string[], timeDif: string){
+
+    let timeFrame: TimeExpr = parseTime(timeDif);
+    let timeStamp = calcTimeStamp(timeFrame.unit, "ms", timeFrame.measure);
+    let result: string[] = [];
+
+    recs.forEach((line) => {
+        if (line.trim().length > 0) {
+            result.push(line + " " + timeStamp);
+        }
+    })
+
+    return result;
+
+}
+
+
 
 
 

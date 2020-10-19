@@ -3,4 +3,3 @@ node_modules
 .idea
 *.log
 *.js
-*.d.ts

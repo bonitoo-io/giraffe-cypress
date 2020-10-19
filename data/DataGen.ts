@@ -11,7 +11,7 @@ For actual tests use the exported modules
 
 import {InfluxDB, Point, HttpError} from '@influxdata/influxdb-client'
 
-import {addTimestampToRecsFromFile} from './Utils';
+import {addTimestampToRecs} from './Utils';
 import {query, writeLP, InfluxParams} from './Client'
 import * as fs from "fs";
 
@@ -75,6 +75,30 @@ async function writeRecords(recs: string[]){
         })
 }
 
+const data = fs.readFileSync(`${__dirname}/sources/futuroscope01.lp`, 'utf-8');
+const lines = data.split('\n');
+
+
+addTimestampToRecs(lines, '-30m').then(async (lines) =>{
+
+    lines.forEach((line) => {
+        console.log("DEBUG line: " + line);
+    });
+
+    await writeLP(dbParams, "ms", lines).then(async () => {
+        console.log("DEBUG query " + JSON.stringify(await query({url: iVars['INFLUX_URL'],
+            token: iVars['INFLUX_TOKEN'],
+            org: iVars['INFLUX_ORG']}, "from(bucket: \"qa\")\n" +
+            "  |> range(start: -1h)\n" +
+            "  |> filter(fn: (r) => r[\"_measurement\"] == \"myGis\")\n" +
+            "  |> last()", ["_time", "lon", "lat", "nom"])))
+    }).catch(err => {
+        console.error("CAUGHT ERROR: " + err)
+    });
+
+});
+
+/*
 addTimestampToRecsFromFile(`${__dirname}/sources/futuroscope01.lp`, '-30m')
     .then(async (lines) => {
     lines.forEach((line) => {
@@ -92,7 +116,7 @@ addTimestampToRecsFromFile(`${__dirname}/sources/futuroscope01.lp`, '-30m')
         console.error("CAUGHT ERROR: " + err)
     });
 
-    /*
+    *//*
     await writeRecords(lines).then(async () => {
         console.log("DEBUG query " + query({url: iVars['INFLUX_URL'],
               token: iVars['INFLUX_TOKEN'],
@@ -100,7 +124,8 @@ addTimestampToRecsFromFile(`${__dirname}/sources/futuroscope01.lp`, '-30m')
             "  |> range(start: -1h)\n" +
             "  |> filter(fn: (r) => r[\"_measurement\"] == \"myGis\")\n" +
             "  |> last()", ["_time", "lon", "lat", "nom"]))
-    }); */
+    }); *//*
     console.log("DEBUG: WROTE RECORDS")
 });
 
+*/

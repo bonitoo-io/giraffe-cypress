@@ -10,9 +10,9 @@
     "rep:setup": "../scripts/setup.sh reporting",
     "rep:clean": "rm -rdf cypress/screenshots/; rm -rdf cypress/videos; rm -rdf site",
     "rep:junit": "utils/junit-merge.ts -s site/junit/ -o site/test-results.xml",
-    "scr:check": "ls -al ..",
-    "cy:open": "cypress open",
-    "cy:run": "yarn rep:setup && yarn rep:clean && cypress run",
+    "scr:copy": "utils/genInfluxFixture.ts",
+    "cy:open": "utils/genInfluxFixture.ts && cypress open",
+    "cy:run": "yarn rep:setup && yarn rep:clean && utils/genInfluxFixture.ts && cypress run",
     "cy:reports": "yarn rep:junit; yarn rep:merge; yarn rep:awesome",
     "cy:all": "yarn cy:run; yarn cy:reports",
     "cy:clean": "echo TODO script cy:clean"
