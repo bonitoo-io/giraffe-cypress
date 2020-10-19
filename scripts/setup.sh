@@ -205,7 +205,7 @@ run_docker_influx(){
 
 setup_docker_influx(){
   echo "======== Setting up Influxdbv2 Docker ===="
-  timeout 30 bash -c 'while ! wget -O /dev/null http://localhost:8086/api/v2/setup; do sleep 1; done;'
+  timeout 30 bash -c 'while ! wget -q -o /dev/null -O /dev/null http://localhost:8086/api/v2/setup; do sleep 1; done;'
   exit_status=$?
   if [[  ${exit_status} -ne 0 ]]; then
      echo "Influx Docker FAILED to locate setup endpoint in 30 seconds.  Default user not created."
