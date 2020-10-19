@@ -205,8 +205,12 @@ run_docker_influx(){
 
 setup_docker_influx(){
   echo "======== Setting up Influxdbv2 Docker ===="
-  # sometimes seems to overrun booting from run - so wait a bit
-  sleep 5
+  timeout 30 bash -c 'while ! wget http://localhost:8086/api/v2/setup -o /dev/null; do sleep 1; done;'
+  exit_status=$?
+  if [[  ${exit_status} -ne 0 ]]; then
+     echo "Influx Docker FAILED to locate setup endpoint in 30 seconds.  Default user not created."
+     exit 1
+   fi
   source ${PRJ_ROOT}/scripts/influx_env.sh
   echo "INFLUX_USERNAME ${INFLUX_USERNAME}"
   echo "INFLUX_ORG ${INFLUX_ORG}"
