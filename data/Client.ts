@@ -15,8 +15,7 @@ interface Dico {
 * */
 
 export async function writeLP(connect: InfluxParams, prec: string, recs: string[]){
-    console.log('*** WRITE RECORDS ***')
-    console.log('DEBUG process.cwd() ' + process.cwd())
+//    console.log('*** WRITE RECORDS ***')
     if(typeof(connect.bucket) === 'undefined'){
         throw 'connect.bucket is undefined.  Cannot write to DB without bucket';
     }
@@ -28,7 +27,7 @@ export async function writeLP(connect: InfluxParams, prec: string, recs: string[
     await writeApi
         .close()
         .then(()=> {
-            console.log('Wrote recs:\n' + recs.join('\n'));
+            //console.log('Wrote recs:\n' + recs.join('\n'));
         })
         .catch((e) => {
             console.error(e)
