@@ -58,7 +58,7 @@ export const echoValue = (value: any) => {
 * */
 
 export const datagenFromLPFixture = (lpFile: string, timeDif?: string) => {
-    cy.fixture('influxEnv').then(({url,username,password,org,bucket,token}) => {
+    cy.fixture('influx/influxEnv').then(({url,username,password,org,bucket,token}) => {
        cy.fixture(lpFile).then((contents) => {
            let recs = contents.split('\n');
 
