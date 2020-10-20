@@ -28,7 +28,8 @@ export default function Home({data}){
             </Head>
             <section style={{height:"608px", width: "608px" }}>
                 <p>Simple Map With Circles</p>
-                <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}>
+                <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}
+                     data-testid='geowidget-circles'>
                     <GiraffeGeoTest data={data}/>
                 </div>
 

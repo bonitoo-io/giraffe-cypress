@@ -2,7 +2,9 @@
 import {
     addTimestampToRecs,
     datagenFromLPFixture,
-    echoValue
+    echoValue,
+    parseLeafletTileSrc,
+    parseSVGPathD
 } from './support/commands'
 
 declare global {
@@ -11,6 +13,8 @@ declare global {
             addTimestampToRecs: typeof addTimestampToRecs
             datagenFromLPFixture: typeof datagenFromLPFixture
             echoValue: typeof echoValue
+            parseLeafletTileSrc: typeof parseLeafletTileSrc
+            parseSVGPathD: typeof parseSVGPathD
         }
     }
 }
