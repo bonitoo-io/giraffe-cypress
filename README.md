@@ -10,7 +10,7 @@ The testing cycle is comprised of three basic tasks.
    1. Start Nexjs in either dev or prod mode
    1. Start a backend Influxdata database (currently OSS docker)
    1. Initiate Influxdata with test account
-1. Add data to the backend database (in future should become part of third step)
+1. Add data to the backend database (only needed when inspecting the Application.  Data can be added as a support command in Cypress.)
 1. Run the tests 
 
 ## Simplest Getting Started 
@@ -19,7 +19,7 @@ The testing cycle is comprised of three basic tasks.
 
 `$ scripts/setup.sh`
 
-2) Add test data
+2) When preparing tests and inspecting the applications, add test data
 
 `$ cd data/ && ./DataGen.ts; cd -`
 
@@ -29,7 +29,7 @@ The testing cycle is comprised of three basic tasks.
 
 `$ yarn cy:all`
 
-Test reports are in the directory `tests/site`
+Test reports are in the directory `tests/site`.
 
 4) Clean up test reports (in the directory `tests`)
 
@@ -45,6 +45,21 @@ Test reports are in the directory `tests/site`
 
 ## The App
 
+The application is intended to be rudimentary.  It is written in React with the Nextjs framework.  Nextjs is fairly lightweight and it offers a mapping from the directory structure under `pages` to server contexts.  This simplifies adding new pages dedicated to rendering and then testing specific Giraffe feature sets.   
+
+One requirement was to test the full stack as closely as possible.  For this reason test data is written to an Influxdata OSS server on the backend.  The data is then retrieved by the application and provided to Giraffe. Note, there is a backlog item to leverage Influxdata clients directly in the Giraffe library.  This may need to be added in future.  
+
+The application can be configured and started using the `setup.sh` script in the `scripts` directory.  This script can add Giraffe to the application in one of two ways, checkout from github or downloading a release.  It can also start the Nodejs application in `dev` (default) or `production` modes.
+
+The `setup.sh` script accepts six commands. 
+
+   * `create` - (Default) creates and launches the Nextjs application
+   * `clean` - Removes Giraffe from the application
+   * `shutdown` - Shuts down the application
+   * `data` - Builds and links in the data module.  Useful during development. 
+   * `influx` - Reinstalls the Influx docker backend database. 
+   * `reporting` - Sets up linked directories for Cypress reporting.  Used mainly in test scripts. 
+
 **Start**
 
 In dev mode (for adding elements) 
@@ -55,9 +70,25 @@ In production mode (for testing)
 
 `$ scripts/setup.sh create -m prod`
 
-The script installs Giraffe 
+**Giraffe Config**
 
-TODO describe Giraffe install options 
+The script installs Giraffe either from the release of from a local build checked out from github. 
+
+To checkout the latest release
+
+`scripts/setup.sh -d release` 
+
+Specific release (`-r, --release`), tag (`-t, --tag`) and version (`-v, --version`) can also be specified. 
+
+To build Giraffe locally from the github project, use the default. 
+
+`scripts/setup.sh` 
+
+Or to be more verbose use the flag(`-d`, `--dist`): 
+
+`scripts/setup.sh --dist local`
+
+A specific git url can also be specified using the flag (`-u, --url`).  Specific branches can also be declared (`-b`, `--branch`); 
 
 **Shutdown**
 
@@ -75,9 +106,41 @@ To clean up the installation by removing Giraffe and cleaning up the local Influ
 
 In order to share data sources and data related utilities between the application and the test suite all data related artefacts are stored in the data module.  This module is then built and linked into the app workspace as part of the `create` command in the setup.sh script.  The `data` command in the setup.sh script rebuilds the module and links it into both `app` and `test` modules.
 
+When developing tests it can be useful to add data to the database.  This can be done with the `DataGen.ts` script. 
+
+`$ data/DataGen.ts`
+
 ## Tests
 
-Tests in the tests directory are Cypress based.  Two types of reports are generated; Mochawesome and Junit. When using the _workspace_ idiom Cypress cannot find the reporting modules located in the parent module.  In order to work around this issue, the reporting modules need to be soft-linked into the `tests/node_modules` directory.  This is also handled by the setup.sh script through the `reporting` command.  This is also wrapped in the yarn/npm scripts in the `tests` module.  
+Tests in the tests directory are Cypress based.  Two types of reports are generated; Mochawesome and Junit. When using the _workspace_ idiom Cypress cannot find the reporting modules located in the parent module.  In order to work around this issue, the reporting modules need to be soft-linked into the `tests/node_modules` directory.  This is handled by the `setup.sh` script through the `reporting` command.  This is also wrapped in the yarn/npm scripts in the `tests` module.
+
+Test related commands can be executed in the `tests` directory. 
+
+**Start Cypress dev**
+
+`$ yarn cy:open`
+
+This opens the Cypress electron 
+
+**Run all tests**
+
+`$ yarn cy:run`
+
+Currently tests against Electron.  (TODO configure target browser choice).
+
+**Generate reports**
+
+`$ yarn cy:reports`
+
+Generates JUnit and HTML reports to directory `tests/sites`.  Note that screenshots and screencasts can be found in the directories `tests/cypress/screenshots` and `tests/cypress/videos` respectively. 
+
+**Test and Report**
+
+`$ yarn cy:all`
+
+**Clean reports**
+
+`$ yarn rep:clean`
 
   
 
