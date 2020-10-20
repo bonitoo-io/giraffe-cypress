@@ -45,7 +45,7 @@ Test reports are in the directory `tests/site`.
 
 ## The App
 
-The application is intended to be rudimentary.  It is written in React with the Nextjs framework.  Nextjs is fairly lightweight and it offers a mapping from the directory structure under `pages` to server contexts.  This simplifies adding new pages dedicated to rendering and then testing specific Giraffe feature sets.   
+The application is intended to be rudimentary.  It is written in React with the Nextjs framework.  Nextjs is fairly lightweight and it offers a mapping from the directory structure under the  `app/pages` directory to server contexts.  This simplifies adding new pages dedicated to rendering and then testing specific Giraffe feature sets.   
 
 One requirement was to test the full stack as closely as possible.  For this reason test data is written to an Influxdata OSS server on the backend.  The data is then retrieved by the application and provided to Giraffe. Note, there is a backlog item to leverage Influxdata clients directly in the Giraffe library.  This may need to be added in future.  
 
@@ -74,7 +74,7 @@ In production mode (for testing)
 
 The script installs Giraffe either from the release of from a local build checked out from github. 
 
-To checkout the latest release
+To link in the latest release
 
 `scripts/setup.sh -d release` 
 
@@ -120,7 +120,7 @@ Test related commands can be executed in the `tests` directory.
 
 `$ yarn cy:open`
 
-This opens the Cypress electron 
+This opens the Cypress electron development environment. 
 
 **Run all tests**
 
@@ -132,7 +132,7 @@ Currently tests against Electron.  (TODO configure target browser choice).
 
 `$ yarn cy:reports`
 
-Generates JUnit and HTML reports to directory `tests/sites`.  Note that screenshots and screencasts can be found in the directories `tests/cypress/screenshots` and `tests/cypress/videos` respectively. 
+Generates JUnit and HTML reports to the directory `tests/sites`.  Note that screenshots and screencasts can be found in the directories `tests/cypress/screenshots` and `tests/cypress/videos` respectively. 
 
 **Test and Report**
 
