@@ -4,7 +4,8 @@ import {
     datagenFromLPFixture,
     echoValue,
     parseLeafletTileSrc,
-    parseSVGPathD
+    parseSVGPathD,
+    calcSVGPointDistance
 } from './support/commands'
 
 declare global {
@@ -15,6 +16,7 @@ declare global {
             echoValue: typeof echoValue
             parseLeafletTileSrc: typeof parseLeafletTileSrc
             parseSVGPathD: typeof parseSVGPathD
+            calcSVGPointDistance: typeof calcSVGPointDistance
         }
     }
 }

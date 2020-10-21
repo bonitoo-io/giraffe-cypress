@@ -67,6 +67,29 @@ export const parseSVGPathD = (d: string): Cypress.Chainable => {
     return cy.wrap(result)
 }
 
+//coord e.g M260,348
+const parseSVGCoordinate = (coord: string): {x: number, y: number} => {
+    let result: {x: number, y: number} = {x: 0, y: 0}
+    if(coord.charAt(0) === 'M'){
+        coord = coord.slice(1)
+    }
+    let parts = coord.split(',');
+    result.x = parseFloat(parts[0]);
+    result.y = parseFloat(parts[1]);
+
+    return result;
+}
+
+export const calcSVGPointDistance = (m1: string, m2: string): Cypress.Chainable => {
+    let result: number = 0;
+    let pointM1 = parseSVGCoordinate(m1);
+    let pointM2 = parseSVGCoordinate(m2);
+
+    result = Math.sqrt((((pointM1.x - pointM2.x)**2) + ((pointM1.y - pointM2.y)**2)))
+
+    return cy.wrap(result)
+}
+
 
 function recsHaveTimeStamps(recs: string[]){
     let recWithoutStamp = false;
@@ -119,4 +142,5 @@ Cypress.Commands.add("datagenFromLPFixture", datagenFromLPFixture);
 Cypress.Commands.add("echoValue", echoValue);
 Cypress.Commands.add("parseLeafletTileSrc", parseLeafletTileSrc)
 Cypress.Commands.add('parseSVGPathD',parseSVGPathD)
+Cypress.Commands.add('calcSVGPointDistance', calcSVGPointDistance)
 
