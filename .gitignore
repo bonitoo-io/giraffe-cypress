@@ -3,3 +3,9 @@ node_modules
 .idea
 *.log
 *.js
+[A-Z]*.d.ts
+data/*.d.ts
+tests/cypress/fixtures/influx/*
+tests/cypress/screenshots/*
+tests/cypress/videos/*
+tests/site/*
