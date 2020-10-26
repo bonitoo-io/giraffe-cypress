@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "rep:merge": "mkdir -p site; mochawesome-merge site/mochawesome/*.json > site/output.json",
-    "rep:awesome": "marge --reportDir site/mochawesome-html-report -t Giraffe_Cypress_Tests -p Cypress_HMTL_Report -f Cypress_HMTL_Report --charts true site/output.json",
+    "rep:awesome": "marge --reportDir site/mochawesome-html-report -t Giraffe_Cypress_Tests -p Cypress_HMTL_Report -f index --charts true site/output.json",
     "rep:setup": "../scripts/setup.sh reporting",
     "rep:clean": "rm -rdf cypress/screenshots/; rm -rdf cypress/videos; rm -rdf site",
     "rep:junit": "utils/junit-merge.ts -s site/junit/ -o site/test-results.xml",
