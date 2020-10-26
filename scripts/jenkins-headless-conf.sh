@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "======== PREPARING JENKINS HEADLESS ENV ========"
+
 # to be used to configure jenkins nodes
 
 echo "=============== Installing NODE 12 ===="
