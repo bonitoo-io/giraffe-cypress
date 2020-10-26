@@ -18,6 +18,7 @@ APP_BUILD="dev"
 APP_LOG_FILE="${PRJ_ROOT}/app/next.log"
 
 INFLUX_DOCKER_IMAGE="quay.io/influxdb/influx:nightly"
+INFLUX_DOCKER_LOCAL_IMAGE="influx2_debug"
 INFLUX_INSTANCE_NAME="influx2_solo"
 INFLUX_HOME="${HOME}/.influxdbv2"
 INFLUX_LOG_DIR=${PRJ_ROOT}/scripts/log
@@ -193,9 +194,15 @@ kill_next_hard(){
 
 run_docker_influx(){
    echo "======== Installing Influxdbv2 Docker ===="
+   echo "============ building local docker image ====="
+   cd ${PRJ_ROOT}/scripts || exit
+   sudo docker pull ${INFLUX_DOCKER_IMAGE}
+   sudo docker build -t ${INFLUX_DOCKER_LOCAL_IMAGE} .
+   cd - || exit
+   echo "============ starting local docker container ====="
    mkdir -p ${INFLUX_LOG_DIR}
    echo "[$(date +"%d.%m.%Y %T")] starting docker instance ${INFLUX_INSTANCE_NAME}"
-   sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
+   sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_LOCAL_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
    echo "[$(date +"%d.%m.%Y %T")] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
    echo "logfile at $INFLUX_LOG_FILE"
    # TODO better wait for Influx to start
