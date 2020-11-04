@@ -70,6 +70,17 @@ build_giraffe(){
   if [[ -d $INFLUX_DIR_ABS/giraffe/giraffe ]]; then
      cd ${INFLUX_DIR_ABS}/giraffe/giraffe || echo "failed to cd ${INFLUX_DIR_ABS}/giraffe/giraffe"
      git checkout $GIRAFFE_GITHUB_BRANCH
+     if [[ -v COMMIT ]]; then
+       echo "  === Checking out commit ${COMMIT}"
+       git checkout ${COMMIT}
+       ckout_status=$?
+       if [ $ckout_status -eq 0 ]; then
+          echo "Checkout ${COMMIT} SUCCESS"
+       else
+          echo "Checkout ${COMMIT} FAILED - Aborting"
+          exit 1
+       fi
+     fi
      yarn
      yarn build
      exit_status=$?
@@ -166,10 +177,31 @@ create_app(){
    fi
    setup_docker_influx
 
+   start_app
+#   cd ${PRJ_ROOT}/app || exit 1
+
+#   echo "===== STARTING NEXTJS APP ====="
+#   if [[ "${APP_BUILD}" = "dev" ]]; then
+#       echo "======== Running in Dev Mode ===="
+#       yarn dev > ${APP_LOG_FILE} 2>&1 &
+#       echo $!
+#   elif [[  "${APP_BUILD}" = "prod" ]]; then
+#       echo "======== Running in Production Mode ===="
+
+#       yarn build
+#       yarn start > ${APP_LOG_FILE} 2>&1 &
+#       exit_status=$?
+#       echo "exit_status ${exit_status}"
+#   fi
+
+#   cd - || exit 1
+}
+
+start_app(){
    cd ${PRJ_ROOT}/app || exit 1
 
    #export FOO=BARBAR;
-
+   echo "===== STARTING NEXTJS APP ====="
    if [[ "${APP_BUILD}" = "dev" ]]; then
        echo "======== Running in Dev Mode ===="
        yarn dev > ${APP_LOG_FILE} 2>&1 &
@@ -184,6 +216,7 @@ create_app(){
    fi
 
    cd - || exit 1
+
 }
 
 kill_next_hard(){
@@ -291,9 +324,12 @@ usage(){
    echo "Setup the Giraffe test application framework"
    echo ""
    echo "Commands:"
-   echo "   create    Create the application. Default command."
+   echo "   create    Create the application. Do everything.  Default command."
    echo "   clean     Clean the application"
    echo "   shutdown  Shutdown the application"
+   echo "   start     Start the NextJS application - but not backend"
+   echo "   stop      Stop the Nextjs application - but  not backend"
+   echo "   restart   Restart the NextJS application - but not backend"
    echo "   data      Rebuild data module    "
    echo "   influx    Reset influx docker backend"
    echo "   reporting Setup linked directories for cypress reporting - used in test scripts"
@@ -304,6 +340,7 @@ usage(){
    echo "                  Note release checks out latest by default.  Unless either -t or -v is specified. "
    echo "   -u | --url     Github URL to Giraffe project.  Default ${GIRAFFE_GITHUB_URL}"
    echo "   -b | --branch  Branch in Giraffe project to test.  Default ${GIRAFFE_GITHUB_BRANCH}"
+   echo "   -c | --commit  Build specific commit"
    echo "   -r | --release If release, then which release.  Default ${GIRAFFE_DIST}"
    echo "   -t | --tag     If release, then use this tag.  Default Undefined"
    echo "   -v | --version If release, the use this version. Default Undefined"
@@ -323,6 +360,12 @@ while [ "$1" != "" ]; do
       influx )         ACTION="influx"
                        ;;
       reporting )      ACTION="reporting"
+                       ;;
+      start )          ACTION="start"
+                       ;;
+      stop )           ACTION="stop"
+                       ;;
+      restart )        ACTION="restart"
                        ;;
       -d | --dist )    shift
                        DIST=$1
@@ -344,6 +387,9 @@ while [ "$1" != "" ]; do
                        ;;
       -m | --mode )    shift
                        APP_BUILD=$1
+                       ;;
+      -c | --commit )  shift
+                       COMMIT=$1
                        ;;
       * )              usage
                        exit 1
@@ -367,6 +413,13 @@ case $ACTION in
                  ;;
    shutdown )    kill_next_hard
                  stop_docker_influx
+                 ;;
+   stop )        kill_next_hard
+                 ;;
+   start )       start_app
+                 ;;
+   restart )     kill_next_hard
+                 start_app
                  ;;
    influx )      stop_docker_influx
                  run_docker_influx
