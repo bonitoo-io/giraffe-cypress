@@ -14,8 +14,25 @@ describe('GeoWidget - Basic - Map with Circles', () => {
         cy.screenshot();
     })
 
-    it('successfully loads', () => {
+    it('verifies leaflet css is present', () => {
+        let hasLeaflet = false;
+        cy.wait(1500)
+            .document()
+            .then(doc => {
+            let styles = doc.querySelectorAll('style');
+            styles.forEach((style, index ) => {
+                if(style.textContent && style.textContent.includes('.leaflet-container')){
+                    hasLeaflet = true;
+                }
+            })
+            //expect(JSON.stringify(doc.head.style)).contains('leaflet-container')
+        }).then( () => {
+            expect(hasLeaflet, '.leaflet-content styles included').to.be.true
+        })
+    })
 
+    it('successfully loads', () => {
+        
         cy.get('[data-testid=geowidget-circles]').should('be.visible');
         //verify circle count
         cy.get('g > path').should('have.length', 7).each(path => {
@@ -172,6 +189,31 @@ describe('GeoWidget - Basic - Map with Circles', () => {
 
     it('pans horizontally', () => {
         cy.log('TODO horizontal pan')
+        let baseDist = 0;
+        //check distance before zoom out
+        cy.get('g > path').then(paths => {
+            cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                    cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                        baseDist= distance;
+                    })
+                })
+            })
+        }).then(() => {
+            cy.log('DEBUG baseDist ' + baseDist)
+        })
+
+
+
+        let dims: {height: number, width: number} = {height: 0, width: 0}
+        cy.get('div.leaflet-container').then(container => {
+            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+            dims.height = container.height() as number;
+            dims.width = container.width() as number;
+        })
+
+        cy.log('DEBUG dims ' + JSON.stringify(dims));
+
     })
 
     it('pans vertically', () => {
