@@ -81,7 +81,7 @@ build_giraffe(){
           exit 1
        fi
      fi
-     yarn
+     yarn install
      yarn build
      exit_status=$?
      if [ $exit_status -eq 0 ]; then
@@ -200,6 +200,9 @@ create_app(){
 start_app(){
    cd ${PRJ_ROOT}/app || exit 1
 
+   yarn install
+   yarn build
+
    #export FOO=BARBAR;
    echo "===== STARTING NEXTJS APP ====="
    if [[ "${APP_BUILD}" = "dev" ]]; then
@@ -208,8 +211,6 @@ start_app(){
        echo $!
    elif [[  "${APP_BUILD}" = "prod" ]]; then
        echo "======== Running in Production Mode ===="
-
-       yarn build
        yarn start > ${APP_LOG_FILE} 2>&1 &
        exit_status=$?
        echo "exit_status ${exit_status}"
