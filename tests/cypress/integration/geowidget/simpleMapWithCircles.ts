@@ -190,7 +190,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
     it('pans horizontally', () => {
         cy.log('TODO horizontal pan')
         let baseDist = 0;
-        //check distance before zoom out
+        //check distance before pan
         cy.get('g > path').then(paths => {
             cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
                 cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
@@ -203,20 +203,177 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             cy.log('DEBUG baseDist ' + baseDist)
         })
 
-
-
-        let dims: {height: number, width: number} = {height: 0, width: 0}
-        cy.get('div.leaflet-container').then(container => {
+        let dims: {height: number,
+            width: number,
+            left: number,
+            top: number} = {height: 0, width: 0, left: 0, top: 0}
+        cy.get('div.giraffe-plot').then(container => {
             cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
             dims.height = container.height() as number;
             dims.width = container.width() as number;
-        })
+            let offset: JQuery.Coordinates | undefined = container.offset();
+            dims.top = offset === undefined ? 0 : offset.top;
+            dims.left = offset === undefined ? 0 : offset.left;
+        }).wait(1000)
+            .then(() => {
+                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
-        cy.log('DEBUG dims ' + JSON.stringify(dims));
+                // pan away
+                cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width - 2,y:dims.height/2})
+                    .wait(500)
 
+                //Check only 5 circles are visible
+                let arcCt = 0;
+
+                cy.get('g > path').should('have.length', 7)
+                    .each(path => {
+                        cy.parseSVGPathD(path.attr('d') as string).then(def => {
+                            arcCt += def.arcs.length;
+                        })
+                    }).then(() => {
+                    //N.B. point on tile with Niort not visible, but pre-loaded
+                    expect(arcCt/2, 'Some circles are no longer drawn').to.equal(5);
+                })
+
+                //Check distance unchanged
+                let postDist = 0;
+                cy.get('g > path').then(paths => {
+                    cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                        cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                            cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                                postDist= distance;
+                            })
+                        })
+                    })
+                }).then(() => {
+                    expect(postDist, 'Distance between points unchanged with pan').to.equal(baseDist);
+                })
+
+                //pan back
+                cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:2,y:dims.height/2})
+                    .wait(500)
+
+                //Check all 7 circles are visible
+                let arcCt2 = 0;
+
+                cy.get('g > path').should('have.length', 7)
+                    .each(path => {
+                        cy.parseSVGPathD(path.attr('d') as string).then(def => {
+                            arcCt2 += def.arcs.length;
+                        })
+                    }).then(() => {
+                    //N.B. point on tile with Niort not visible, but pre-loaded
+                    expect(arcCt2/2, 'Some circles are no longer drawn').to.equal(7);
+                })
+
+                //Check distance unchanged
+                postDist = 0;
+                cy.get('g > path').then(paths => {
+                    cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                        cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                            cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                                postDist= distance;
+                            })
+                        })
+                    })
+                }).then(() => {
+                    expect(postDist, 'Distance between points unchanged with pan').to.equal(baseDist);
+                })
+            })
     })
 
     it('pans vertically', () => {
-        cy.log('TODO vertical pan')
+        cy.log('TODO horizontal pan')
+        let baseDist = 0;
+        //check distance before pan
+        cy.get('g > path').then(paths => {
+            cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                    cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                        baseDist= distance;
+                    })
+                })
+            })
+        }).then(() => {
+            cy.log('DEBUG baseDist ' + baseDist)
+        })
+
+        let dims: {height: number,
+            width: number,
+            left: number,
+            top: number} = {height: 0, width: 0, left: 0, top: 0}
+        cy.get('div.giraffe-plot').then(container => {
+            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+            dims.height = container.height() as number;
+            dims.width = container.width() as number;
+            let offset: JQuery.Coordinates | undefined = container.offset();
+            dims.top = offset === undefined ? 0 : offset.top;
+            dims.left = offset === undefined ? 0 : offset.left;
+        }).wait(1000)
+            .then(() => {
+                cy.log('DEBUG dims ' + JSON.stringify(dims));
+
+                // pan away
+                cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width/2,y:dims.height - 2})
+                    .wait(500)
+
+                //Check only 5 circles are visible
+                let arcCt = 0;
+
+                cy.get('g > path').should('have.length', 7)
+                    .each(path => {
+                        cy.parseSVGPathD(path.attr('d') as string).then(def => {
+                            arcCt += def.arcs.length;
+                        })
+                    }).then(() => {
+                    //N.B. point on tile with Niort not visible, but pre-loaded
+                    expect(arcCt/2, 'Some circles are no longer drawn').to.equal(5);
+                })
+
+                //Check distance unchanged
+                let postDist = 0;
+                cy.get('g > path').then(paths => {
+                    cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                        cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                            cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                                postDist= distance;
+                            })
+                        })
+                    })
+                }).then(() => {
+                    expect(postDist, 'Distance between points unchanged with pan').to.equal(baseDist);
+                })
+
+                //pan back
+                cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width/2,y:2})
+                    .wait(500)
+
+                //Check all 7 circles are visible
+                let arcCt2 = 0;
+
+                cy.get('g > path').should('have.length', 7)
+                    .each(path => {
+                        cy.parseSVGPathD(path.attr('d') as string).then(def => {
+                            arcCt2 += def.arcs.length;
+                        })
+                    }).then(() => {
+                    //N.B. point on tile with Niort not visible, but pre-loaded
+                    expect(arcCt2/2, 'Some circles are no longer drawn').to.equal(7);
+                })
+
+                //Check distance unchanged
+                postDist = 0;
+                cy.get('g > path').then(paths => {
+                    cy.parseSVGPathD(paths[3].getAttribute('d') as string).then(def1 => {
+                        cy.parseSVGPathD(paths[4].getAttribute('d') as string). then(def2 => {
+                            cy.calcSVGPointDistance(def1.moves[0], def2.moves[0]).then(distance => {
+                                postDist= distance;
+                            })
+                        })
+                    })
+                }).then(() => {
+                    expect(postDist, 'Distance between points unchanged with pan').to.equal(baseDist);
+                })
+            })
     })
 })

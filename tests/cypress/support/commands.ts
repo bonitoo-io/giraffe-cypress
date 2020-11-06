@@ -67,6 +67,38 @@ export const parseSVGPathD = (d: string): Cypress.Chainable => {
     return cy.wrap(result)
 }
 
+export const pan = ( selector: string,
+                     start: {x: number, y: number},
+                     end: {x: number, y: number},
+                     gran: number = 10 )
+                    : Cypress.Chainable => {
+
+    cy.log('Called pan() ' + JSON.stringify(start) + " " + JSON.stringify(end));
+    let xd = Math.abs(start.x - end.x);
+    let yd = Math.abs(start.y - end.y);
+    if(xd === 0 && yd === 0){
+        cy.log('start and end are same point.  Not panning');
+        return cy.get('selector');
+    }
+    let base = xd >= yd ? xd : yd;
+    let xStep = base === xd ? 1 : xd/base;
+    let yStep = base === yd ? 1 : yd/base;
+
+  //  cy.log(`DEBUG pan local vars base ${base} xStep ${xStep} yStep ${yStep}`)
+
+    cy.get(selector).trigger('mousedown', start.x, start.y, { which: 1})
+    for(let i = 0; i < base; i += gran){
+        let x = end.x >= start.x ? start.x - (xStep * i ) : start.x + (xStep * i);
+        let y = end.y >= start.y ? start.y - (yStep * i) : start.y + (yStep * i);
+   //     cy.log(`DEBUG panning ${i} x: ${x} y: ${y}`)
+        cy.get(selector).trigger('mousemove', x, y)
+    }
+
+    cy.get(selector).trigger('mouseup', {force: true});
+
+    return cy.get(selector);
+}
+
 //coord e.g M260,348
 const parseSVGCoordinate = (coord: string): {x: number, y: number} => {
     let result: {x: number, y: number} = {x: 0, y: 0}
@@ -143,4 +175,5 @@ Cypress.Commands.add("echoValue", echoValue);
 Cypress.Commands.add("parseLeafletTileSrc", parseLeafletTileSrc)
 Cypress.Commands.add('parseSVGPathD',parseSVGPathD)
 Cypress.Commands.add('calcSVGPointDistance', calcSVGPointDistance)
+Cypress.Commands.add('pan', pan)
 

@@ -5,7 +5,8 @@ import {
     echoValue,
     parseLeafletTileSrc,
     parseSVGPathD,
-    calcSVGPointDistance
+    calcSVGPointDistance,
+    pan
 } from './support/commands'
 
 declare global {
@@ -17,6 +18,7 @@ declare global {
             parseLeafletTileSrc: typeof parseLeafletTileSrc
             parseSVGPathD: typeof parseSVGPathD
             calcSVGPointDistance: typeof calcSVGPointDistance
+            pan: typeof pan
         }
     }
 }
