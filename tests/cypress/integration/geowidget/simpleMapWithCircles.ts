@@ -14,6 +14,8 @@ describe('GeoWidget - Basic - Map with Circles', () => {
         cy.screenshot();
     })
 
+    //TODO - data update test - circle resize/color change
+
     it('verifies leaflet css is present', () => {
         let hasLeaflet = false;
         cy.wait(1500)
@@ -376,4 +378,42 @@ describe('GeoWidget - Basic - Map with Circles', () => {
                 })
             })
     })
+
+    it('shows a tooltip on focus', () => {
+        cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
+        cy.get('g > path').eq(3).click('center')
+        cy.get('[data-testid=giraffe-tooltip]').should('exist')
+        cy.get('.leaflet-container').click(1,1)
+        cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
+        cy.get('g > path').eq(3).click('right')
+        cy.get('[data-testid=giraffe-tooltip]').should('exist')
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+            .eq(0).then($header => {
+            expect($header.text()).to.equal('Time')
+        })
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+            .eq(1).then($header => {
+            expect($header.text()).to.equal('Mag')
+        })
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+            .eq(2).then($header => {
+            expect($header.text()).to.equal('Dur')
+        })
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+            .eq(0).then($value => {
+            expect($value.text()).to.match(/\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:[0-5]\d{1}:[0-5]\d{1} [A|P]M/)
+        })
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+            .eq(1).then($value => {
+            expect($value.text()).to.match(/\d{1,12}/)
+        })
+        cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+            .eq(2).then($value => {
+            expect($value.text()).to.match(/\d{1,12}/)
+        })
+
+        cy.get('.leaflet-container').click(1,1)
+        cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
+    })
+
 })

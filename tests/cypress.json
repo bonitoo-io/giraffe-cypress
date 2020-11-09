@@ -3,5 +3,7 @@
   "reporter": "cypress-multi-reporters",
   "reporterOptions": {
     "configFile": "reporters.json"
-  }
+  },
+  "viewportHeight": 768,
+  "viewportWidth": 1024
 }
