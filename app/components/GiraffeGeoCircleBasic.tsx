@@ -40,7 +40,7 @@ export const PlotContainer = ({children}) => (
     </div>
 )
 
-function GiraffeGeoTest({data}){
+function GiraffeGeoCircleBasic({data}){
 
     console.log("DEBUG GeoTest data " + data);
     console.log("DEBUG fromRows " + JSON.stringify(fromRows(data)))
@@ -84,4 +84,4 @@ function GiraffeGeoTest({data}){
 
 }
 
-export default GiraffeGeoTest;
+export default GiraffeGeoCircleBasic;

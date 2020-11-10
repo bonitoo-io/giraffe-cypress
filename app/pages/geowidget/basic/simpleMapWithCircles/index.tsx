@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import dynamic from 'next/dynamic'
 
-const GiraffeGeoTest = dynamic(() => {return import('../../../../components/GiraffeGeoTest')},{ssr: false});
+const GiraffeGeoCircleBasic = dynamic(() => {return import('../../../../components/GiraffeGeoCircleBasic')},{ssr: false});
 
 export async function getServerSideProps(){
 
@@ -30,7 +30,7 @@ export default function Home({data}){
                 <p>Simple Map With Circles</p>
                 <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}
                      data-testid='geowidget-circles'>
-                    <GiraffeGeoTest data={data}/>
+                    <GiraffeGeoCircleBasic data={data}/>
                 </div>
 
             </section>
