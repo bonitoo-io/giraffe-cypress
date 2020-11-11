@@ -122,6 +122,50 @@ export const calcSVGPointDistance = (m1: string, m2: string): Cypress.Chainable 
     return cy.wrap(result)
 }
 
+export const calcElementDistance = (e1: Element, e2: Element): Cypress.Chainable => {
+    let p1: {x: number, y: number} = {x: 0, y: 0};
+    let p2: {x: number, y: number} = {x: 0, y: 0};
+    let p1Rect = e1.getBoundingClientRect();
+    let p2Rect = e2.getBoundingClientRect();
+    p1.x = p1Rect.x;
+    p1.y = p1Rect.y;
+    p2.x = p2Rect.x;
+    p2.y = p2Rect.y;
+    let result = Math.sqrt(((p1.x - p2.x)**2) + ((p1.y - p2.y)**2))
+    return cy.wrap(result)
+}
+
+export const elementIsInBounds = (container: HTMLElement, elem: HTMLElement) => {
+    let containerDims = container.getBoundingClientRect();
+    let elemDims = elem.getBoundingClientRect();
+    return ! (elemDims.x > (containerDims.x + containerDims.width) ||
+        elemDims.x < containerDims.x ||
+        elemDims.y > (containerDims.y + containerDims.height) ||
+        elemDims.y < containerDims.y)
+}
+
+export const calcVisibleElements = (container: JQuery<HTMLElement>,
+                                    elems: JQuery<HTMLElement>): Cypress.Chainable => {
+
+    let count = 0;
+    for(let i = 0; i < elems.length; i++){
+        if(elementIsInBounds(container[0],elems[i])){
+            count++
+        }
+    }
+    return cy.wrap(count)
+}
+
+export const calcHiddenElements = (container: JQuery<HTMLElement>,
+                                   elems: JQuery<HTMLElement>) : Cypress.Chainable => {
+    let count = 0;
+    for(let i = 0; i < elems.length; i++){
+        if(!elementIsInBounds(container[0],elems[i])){
+            count++
+        }
+    }
+    return cy.wrap(count)
+}
 
 function recsHaveTimeStamps(recs: string[]){
     let recWithoutStamp = false;
@@ -176,4 +220,7 @@ Cypress.Commands.add("parseLeafletTileSrc", parseLeafletTileSrc)
 Cypress.Commands.add('parseSVGPathD',parseSVGPathD)
 Cypress.Commands.add('calcSVGPointDistance', calcSVGPointDistance)
 Cypress.Commands.add('pan', pan)
+Cypress.Commands.add('calcElementDistance',calcElementDistance)
+Cypress.Commands.add('calcVisibleElements', calcVisibleElements)
+Cypress.Commands.add('calcHiddenElements',calcHiddenElements)
 

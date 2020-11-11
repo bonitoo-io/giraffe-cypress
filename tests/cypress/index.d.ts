@@ -6,7 +6,10 @@ import {
     parseLeafletTileSrc,
     parseSVGPathD,
     calcSVGPointDistance,
-    pan
+    pan,
+    calcElementDistance,
+    calcHiddenElements,
+    calcVisibleElements
 } from './support/commands'
 
 declare global {
@@ -19,6 +22,9 @@ declare global {
             parseSVGPathD: typeof parseSVGPathD
             calcSVGPointDistance: typeof calcSVGPointDistance
             pan: typeof pan
+            calcElementDistance: typeof calcElementDistance
+            calcHiddenElements: typeof calcHiddenElements
+            calcVisibleElements: typeof calcVisibleElements
         }
     }
 }

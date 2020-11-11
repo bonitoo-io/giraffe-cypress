@@ -190,7 +190,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
     })
 
     it('pans horizontally', () => {
-        cy.log('TODO horizontal pan')
+
         let baseDist = 0;
         //check distance before pan
         cy.get('g > path').then(paths => {
@@ -285,7 +285,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
     })
 
     it('pans vertically', () => {
-        cy.log('TODO horizontal pan')
+
         let baseDist = 0;
         //check distance before pan
         cy.get('g > path').then(paths => {
