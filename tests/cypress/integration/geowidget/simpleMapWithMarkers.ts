@@ -309,16 +309,53 @@ describe('GeoWidget - Basic - Map with Markers', () => {
 
     })
 
-    //TODO find right mouse event to make popup disappear
-    it.skip('shows a tooltip on focus', () => {
-        for(let i = 1; i < 7; i++){
-            cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
-    //        cy.get('.svg-icon > svg').eq(0).click().wait(3000)
-            cy.get('.svg-icon').eq(i).trigger('mouseover').wait(3000)
-            cy.get('[data-testid=giraffe-tooltip]').should('exist')
-            cy.get('.svg-icon').eq(i).trigger('mouseleave').wait(1000)
-            cy.get('.leaflet-container').click(1,1)
-        }
+    it('shows a tooltip on focus', () => {
+            let svgloc: DOMRect;
+            let containerloc: DOMRect;
+
+        //N.B. it seems 'cy.trigger()' only fires events, it does not
+        //    'emulate' the cursor.  Popups may not appear in
+        //    screenshots or videos because popups follow the actual
+        //    cursor.  But the DOM is (should be) changed.
+        //
+        //will need container rectangle to calculate mouse event locations
+        cy.get('.leaflet-container').then(container => {
+            containerloc = container[0].getBoundingClientRect();
+            //check a handful of  markers
+            for(let i = 3; i < 6; i++) {
+                cy.get('.svg-icon').eq(i).then(svg => {
+                    cy.log('DEBUG svg ' + JSON.stringify(svg[0].getBoundingClientRect()));
+                    svgloc = svg[0].getBoundingClientRect();
+                    svgloc.x = (svgloc.x + (svgloc.width / 2)) - containerloc.x;
+                    svgloc.y = (svgloc.y + (svgloc.height / 2)) - containerloc.y;
+
+                    cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
+                    cy.get('.leaflet-container').trigger('mouseover', svgloc.x, svgloc.y)
+                    cy.get('[data-testid=giraffe-tooltip]').should('exist')
+                    //check tooltip contents
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+                        .eq(0).then($header => {
+                        expect($header.text()).to.equal('Time')
+                    })
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+                        .eq(1).then($header => {
+                        expect($header.text()).to.equal('Dur')
+                    })
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+                        .eq(0).then($value => {
+                        expect($value.text()).to.match(/\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:[0-5]\d{1}:[0-5]\d{1} [A|P]M/)
+                    })
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+                        .eq(1).then($value => {
+                        expect($value.text()).to.match(/\d{1,12}/)
+                    })
+                    //leave the marker
+                    cy.get('.leaflet-container').trigger('mouseout', svgloc.x, svgloc.y)
+
+                })
+            }
+        })
+
     })
 
 })
