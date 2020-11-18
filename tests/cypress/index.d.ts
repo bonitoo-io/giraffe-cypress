@@ -9,7 +9,8 @@ import {
     pan,
     calcElementDistance,
     calcHiddenElements,
-    calcVisibleElements
+    calcVisibleElements,
+    resetDB
 } from './support/commands'
 
 declare global {
@@ -25,6 +26,7 @@ declare global {
             calcElementDistance: typeof calcElementDistance
             calcHiddenElements: typeof calcHiddenElements
             calcVisibleElements: typeof calcVisibleElements
+            resetDB: typeof resetDB
         }
     }
 }

@@ -358,4 +358,21 @@ describe('GeoWidget - Basic - Map with Markers', () => {
 
     })
 
+    it('verifies marker color', () => {
+        cy.get('svg > path').eq(0).then(path => {
+            expect(path.attr('fill')).to.equal('#db0000')
+        })
+        cy.get('svg > path').eq(1).then(path => {
+            expect(path.attr('fill')).to.equal('#006d6f')
+        })
+        cy.get('svg > path').eq(3).then(path => {
+            expect(path.attr('fill')).to.equal('#FF4F00')
+        })
+        cy.get('svg > path').eq(5).then(path => {
+            expect(path.attr('fill')).to.equal('#FFD300')
+        })
+
+
+    })
+
 })

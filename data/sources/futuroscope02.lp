@@ -5,7 +5,7 @@ myGis,nom=Niort,lat=46.32327943948607,lon=-0.46444027996824566 mag=3.35029,dur=1
 myGis,nom=Limoges,lat=45.85,lon=-1.25 mag=3.91812,dur=46.6346
 myGis,nom=Tours,lat=47.393611,lon=-0.689167 mag=2.71521,dur=69.1365
 myGis,nom=Chatellerault,lat=46.817778,lon=-0.546111 mag=1.34449,dur=87.476
-myGis,nom=Chateuroux,lat=46.810278,lon=-1.691111 mag=5.21168,dur=19.9125
+myGis,nom=Chateuroux,lat=46.810278,lon=1.691111 mag=5.21168,dur=19.9125
 myGis,nom=Ruffec,lat=46.028611,lon=-0.199167 mag=12.3863,dur=92.3553
 myGis,nom=Cholet,lat=47.06,lon=0.878333 mag=5.99773,dur=12.2248
 myGis,nom=Saintes,lat=45.746389,lon=0.633333 mag=11.5823,dur=83.0005

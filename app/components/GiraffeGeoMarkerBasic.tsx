@@ -60,12 +60,14 @@ function GiraffeGeoMarkerBasic({data}){
                 layers: [
                     {
                         type: 'pointMap',
-                        colorDimension: {label: 'Dur'},
+                        colorDimension: {label: 'dur'},
                         colorField: 'dur',
                         colors: [
-                            {type: 'min', hex: '#ff8808'},
-                            {value: 50, hex: '#ff0888'},
-                            {type: 'max', hex: '#343aeb'},
+                            {type: 'min', hex: '#006d6f'},
+                            {value: 20, hex: '#FFD300'},
+                            {value: 40, hex: '#FF4F00'},
+                            {value: 60, hex: '#db0000'},
+                            {type: 'max', hex: '#db0000'},
                         ],
                         isClustered: false
                     },

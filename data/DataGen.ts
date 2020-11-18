@@ -20,6 +20,23 @@ interface Dico {
 }
 
 const iVars: Dico = getInfluxEnvars();
+let sourceFile = 'sources/futuroscope01.lp'
+let argv = process.argv;
+argv.shift();
+argv.shift()
+while(argv.length > 0){
+    switch(argv[0]){
+        case '-s':
+        case '--source':
+            argv.shift();
+            sourceFile = argv[0];
+            break;
+        default:
+            console.error(`Unknown argument ${argv[0]}`);
+            process.exit(1);
+    }
+    argv.shift()
+}
 
 export function getIVar(key: string){
     return iVars[key];
@@ -75,7 +92,7 @@ async function writeRecords(recs: string[]){
         })
 }
 
-const data = fs.readFileSync(`${__dirname}/sources/futuroscope01.lp`, 'utf-8');
+const data = fs.readFileSync(`${__dirname}/${sourceFile}`, 'utf-8');
 const lines = data.split('\n');
 
 

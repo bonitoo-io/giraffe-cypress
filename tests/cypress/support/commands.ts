@@ -29,6 +29,19 @@ import * as DataUtil from 'giraffe-cypress-data'
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+export const resetDB = () => {
+
+    cy.fixture('influx/influxEnv').then(({url, username, password, org, bucket, token}) => {
+        cy.visit(`${url}/debug/flush`);
+        cy.wait(1000)
+        return cy.request({
+            method: 'POST',
+            url: `${url}/api/v2/setup`,
+            body: {username, password, org, bucket, token}
+        })
+    })
+}
+
 export const addTimestampToRecs = (recs: string[], timeDif: string) => {
     return cy.wrap(DataUtil.Utils.addTimestampToRecs(recs,timeDif))
 }
@@ -223,4 +236,4 @@ Cypress.Commands.add('pan', pan)
 Cypress.Commands.add('calcElementDistance',calcElementDistance)
 Cypress.Commands.add('calcVisibleElements', calcVisibleElements)
 Cypress.Commands.add('calcHiddenElements',calcHiddenElements)
-
+Cypress.Commands.add('resetDB', resetDB)
