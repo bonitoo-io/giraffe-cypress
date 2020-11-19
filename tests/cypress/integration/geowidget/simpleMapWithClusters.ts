@@ -21,7 +21,17 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
     })
 
 
-    it('first test', () => {
-        cy.log('first test')
+    it('loads expected marker elements', () => {
+        cy.get('div.leaflet-marker-icon').should('have.length', 9)
+        cy.get('.marker-cluster-custom').should('have.length', 8)
+        cy.get('.svg-icon').should('have.length', 1)
+    })
+
+    it('shows cluster polygons', () => {
+        cy.get(' g > path').should('not.be.visible')
+        cy.get('.marker-cluster-custom').eq(3).trigger('mouseover')
+        cy.get(' g > path').should('be.visible')
+        cy.get('.marker-cluster-custom').eq(3).trigger('mouseout')
+        cy.get(' g > path').should('not.be.visible')
     })
 })
