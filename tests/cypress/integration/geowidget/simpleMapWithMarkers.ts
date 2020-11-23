@@ -1,3 +1,7 @@
+before(() => {
+        cy.resetDB();
+})
+
 describe('GeoWidget - Basic - Map with Markers', () => {
 
     before('Load Data', () => {
@@ -339,7 +343,7 @@ describe('GeoWidget - Basic - Map with Markers', () => {
                     })
                     cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
                         .eq(1).then($header => {
-                        expect($header.text()).to.equal('Dur')
+                        expect($header.text()).to.equal('dur')
                     })
                     cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
                         .eq(0).then($value => {

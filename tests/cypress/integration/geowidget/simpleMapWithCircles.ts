@@ -1,3 +1,6 @@
+before(() => {
+        cy.resetDB();
+})
 
 describe('GeoWidget - Basic - Map with Circles', () => {
 

@@ -1,8 +1,6 @@
 
-describe('reset', () => {
-    it('resets the database', () => {
+before(() => {
         cy.resetDB();
-    })
 })
 
 describe('GeoWidget - Basic - Marker Clusters', () => {

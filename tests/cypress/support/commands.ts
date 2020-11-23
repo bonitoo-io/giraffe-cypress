@@ -32,7 +32,7 @@ import * as DataUtil from 'giraffe-cypress-data'
 export const resetDB = () => {
 
     cy.fixture('influx/influxEnv').then(({url, username, password, org, bucket, token}) => {
-        cy.visit(`${url}/debug/flush`);
+        cy.request(`${url}/debug/flush`);
         cy.wait(1000)
         return cy.request({
             method: 'POST',
