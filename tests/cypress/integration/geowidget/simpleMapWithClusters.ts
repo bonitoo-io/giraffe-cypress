@@ -62,7 +62,61 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
        // cy.get('.svg-icon').eq(0).trigger('mouseover');
     })
 
-    it.skip('breaks down clusters on zoom in', () => {
+    it.only('breaks down clusters on basic zoom in', () => {
+        //do zoom in once
+        let expectedCounts = [[2,2,2,8,3,2,2,2]]
+        let expectedColors = [['rgb(255, 79, 0)',
+            'rgb(255, 211, 0)',
+            'rgb(255, 211, 0)',
+            'rgb(255, 79, 0)',
+            'rgb(255, 79, 0)',
+            'rgb(255, 211, 0)',
+            'rgb(255, 79, 0)',
+            'rgb(219, 0, 0)'
+        ]]
+        cy.get('[title=\'Zoom in\'][role=button]')
+            .click()
+            .wait(1000) //wait for zoom to load
+
+        // Check cluster markers
+        cy.get('.marker-cluster-custom').then(markers => {
+            let visibleCt = 0;
+            for(let i = 0; i < 17; i++){
+                //cy.log(`${i} is visible: ${markers.eq(i).is(':visible')}`)
+                if(markers.eq(i).is(':visible')){
+                    cy.get('.marker-cluster-custom > div')
+                        .eq(i)
+                        .should('have.css','background-color', expectedColors[0][visibleCt])
+                    expect(parseInt(markers.eq(i).text()))
+                        .to.equal(expectedCounts[0][visibleCt++]);
+                }
+            }
+            expect(visibleCt).to.equal(8)
+        })
+
+        //check individual markers
+        cy.get('.leaflet-marker-icon > svg').then(markers => {
+            cy.log('DEBUG svg markers.length ' + markers.length);
+            let visibleCt = 0;
+            let expectedMarkerColors = ['#FFD300',
+                '#db0000']
+            for(let i = 0; i < 8; i++){
+                if(markers.eq(i).is(':visible')){
+                    expect(markers.eq(i).find('path').attr('fill'))
+                        .to
+                        .equal(expectedMarkerColors[visibleCt++]);
+                }
+            }
+            expect(visibleCt).to.equal(2);
+        })
+        // Zoom Again
+     /*   cy.get('[title=\'Zoom in\'][role=button]')
+            .click()
+            .wait(1000) //wait for zoom to load
+        cy.get('.marker-cluster-custom').then(markers => {
+            let visibleCt = 0;
+            cy.log('DEBUG markers.length ' + markers.length)
+        }) */
 
     })
 
