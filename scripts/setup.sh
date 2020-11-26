@@ -198,6 +198,7 @@ create_app(){
 }
 
 start_app(){
+   echo "===== BUILDING NEXTJS APP ====="
    cd ${PRJ_ROOT}/app || exit 1
 
    yarn install

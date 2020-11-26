@@ -204,7 +204,7 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
     })
 
-    it.only('expands and zooms clustered markers on click', () => {
+    it('expands and zooms clustered markers on click', () => {
 
         //TODO - Better wait
         //zoom in on largest cluster
