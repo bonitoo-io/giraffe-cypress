@@ -92,6 +92,24 @@ export async function addTimestampToRecs(recs: string[], timeDif: string){
 
 }
 
+export async function addStaggerTimestampToRecs(recs: string[], timeDif: string, stagger: string){
+
+    let result: string[] = []
+
+    for(let i = 0; i < recs.length; i++){
+        let timeFrame: TimeExpr = parseTime(timeDif);
+        let staggerFrame: TimeExpr = parseTime(stagger);
+        if(timeFrame.unit !== staggerFrame.unit){
+            throw (`Time units do not match: ${timeFrame.unit} !== ${staggerFrame.unit}`)
+        }
+        if(recs[i].match(/.* .*/)){
+            let timeStamp = calcTimeStamp(timeFrame.unit, "ms", timeFrame.measure + (staggerFrame.measure * i))
+            result.push(recs[i] + " " + timeStamp);
+        }
+    }
+    return result;
+}
+
 
 
 

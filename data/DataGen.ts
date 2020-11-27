@@ -11,7 +11,7 @@ For actual tests use the exported modules
 
 import {InfluxDB, Point, HttpError} from '@influxdata/influxdb-client'
 
-import {addTimestampToRecs} from './Utils';
+import {addTimestampToRecs, addStaggerTimestampToRecs} from './Utils';
 import {query, writeLP, InfluxParams} from './Client'
 import * as fs from "fs";
 
@@ -21,6 +21,7 @@ interface Dico {
 
 const iVars: Dico = getInfluxEnvars();
 let sourceFile = 'sources/futuroscope01.lp'
+let interval = "";
 let argv = process.argv;
 argv.shift();
 argv.shift()
@@ -30,6 +31,11 @@ while(argv.length > 0){
         case '--source':
             argv.shift();
             sourceFile = argv[0];
+            break;
+        case '-i':
+        case '--interval':
+            argv.shift();
+            interval = argv[0]
             break;
         default:
             console.error(`Unknown argument ${argv[0]}`);
@@ -95,25 +101,49 @@ async function writeRecords(recs: string[]){
 const data = fs.readFileSync(`${__dirname}/${sourceFile}`, 'utf-8');
 const lines = data.split('\n');
 
+if(interval.length !== 0){
 
-addTimestampToRecs(lines, '-30m').then(async (lines) =>{
+    addStaggerTimestampToRecs(lines, '-1800s', interval).then(async (lines) =>{
 
-    lines.forEach((line) => {
-        console.log("DEBUG line: " + line);
+        lines.forEach((line) => {
+            console.log("DEBUG line: " + line);
+        });
+
+        await writeLP(dbParams, "ms", lines).then(async () => {
+            console.log("DEBUG query " + JSON.stringify(await query({url: iVars['INFLUX_URL'],
+                token: iVars['INFLUX_TOKEN'],
+                org: iVars['INFLUX_ORG']}, "from(bucket: \"qa\")\n" +
+                "  |> range(start: -1h)\n" +
+                "  |> filter(fn: (r) => r[\"_measurement\"] == \"myGis\")\n" +
+                "  |> last()", ["_time", "lon", "lat", "nom"])))
+        }).catch(err => {
+            console.error("CAUGHT ERROR: " + err)
+        });
+
+    });
+}else{
+
+    addTimestampToRecs(lines, '-30m').then(async (lines) =>{
+
+        lines.forEach((line) => {
+            console.log("DEBUG line: " + line);
+        });
+
+        await writeLP(dbParams, "ms", lines).then(async () => {
+            console.log("DEBUG query " + JSON.stringify(await query({url: iVars['INFLUX_URL'],
+                token: iVars['INFLUX_TOKEN'],
+                org: iVars['INFLUX_ORG']}, "from(bucket: \"qa\")\n" +
+                "  |> range(start: -1h)\n" +
+                "  |> filter(fn: (r) => r[\"_measurement\"] == \"myGis\")\n" +
+                "  |> last()", ["_time", "lon", "lat", "nom"])))
+        }).catch(err => {
+            console.error("CAUGHT ERROR: " + err)
+        });
+
     });
 
-    await writeLP(dbParams, "ms", lines).then(async () => {
-        console.log("DEBUG query " + JSON.stringify(await query({url: iVars['INFLUX_URL'],
-            token: iVars['INFLUX_TOKEN'],
-            org: iVars['INFLUX_ORG']}, "from(bucket: \"qa\")\n" +
-            "  |> range(start: -1h)\n" +
-            "  |> filter(fn: (r) => r[\"_measurement\"] == \"myGis\")\n" +
-            "  |> last()", ["_time", "lon", "lat", "nom"])))
-    }).catch(err => {
-        console.error("CAUGHT ERROR: " + err)
-    });
+}
 
-});
 
 /*
 addTimestampToRecsFromFile(`${__dirname}/sources/futuroscope01.lp`, '-30m')
