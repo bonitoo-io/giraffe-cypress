@@ -208,7 +208,7 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
         //TODO - Better wait
         //zoom in on largest cluster
-        cy.get('.marker-cluster-custom').eq(3).click().wait(1500) // level 9 - visible 4 clustered 2 markers
+        cy.get('.marker-cluster-custom').eq(3).click().wait(2000) // level 9 - visible 4 clustered 2 markers
         //cy.get('.marker-cluster-custom').eq(3).click().should('not.exist'); //i.e. wait for marker to detach
         //check level
         verifyMapLevel(9)
@@ -226,7 +226,7 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
         //TODO - better wait
         //zoom in on largest cluster of result
-        cy.get('.marker-cluster-custom').eq(7).click().wait(1500) // level 11 - visible 1 cluster 4 markers
+        cy.get('.marker-cluster-custom').eq(7).click().wait(2000) // level 11 - visible 1 cluster 4 markers
         //cy.get('.marker-cluster-custom').eq(7).click().should('not.exist') // e,g wait for marker to detach
 
         //verify new map level
@@ -245,7 +245,7 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
         //TODO better wait
           //zoom in on only cluster remaining
-        cy.get('.marker-cluster-custom').eq(0).click().wait(1500) // level 13 - visible 0 cluster 4 markers
+        cy.get('.marker-cluster-custom').eq(0).click().wait(2000) // level 13 - visible 0 cluster 4 markers
         //cy.get('.marker-cluster-custom').eq(0).click().should('not.exist') // e,g wait for marker to detach
 
         //verify new map level
