@@ -42,8 +42,12 @@ export const resetDB = () => {
     })
 }
 
-export const addTimestampToRecs = (recs: string[], timeDif: string) => {
-    return cy.wrap(DataUtil.Utils.addTimestampToRecs(recs,timeDif))
+export const addTimestampToRecs = (recs: string[], timeDif: string, stagger?: string) => {
+    if(typeof(stagger) === 'undefined') {
+        return cy.wrap(DataUtil.Utils.addTimestampToRecs(recs, timeDif))
+    }else{
+        return cy.wrap(DataUtil.Utils.addStaggerTimestampToRecs(recs, timeDif, stagger))
+    }
 }
 
 export const parseLeafletTileSrc = (src: string): Cypress.Chainable => {
@@ -203,14 +207,14 @@ export const echoValue = (value: any) => {
 *  TODO - add precision.  Currently only 'ms' used.
 * */
 
-export const datagenFromLPFixture = (lpFile: string, timeDif?: string) => {
+export const datagenFromLPFixture = (lpFile: string, timeDif?: string, stagger?: string) => {
     cy.fixture('influx/influxEnv').then(({url,username,password,org,bucket,token}) => {
        cy.fixture(lpFile).then((contents) => {
            let recs = contents.split('\n');
 
            if(!recsHaveTimeStamps(recs)){
                if(typeof(timeDif) === 'undefined'){ timeDif = '-30m'; }
-               cy.addTimestampToRecs(recs, timeDif as string).then(rs => {
+               cy.addTimestampToRecs(recs, timeDif as string, stagger).then(rs => {
                    DataUtil.Client.writeLP({url: url, token: token, bucket: bucket, org: org},
                        "ms",
                        rs as string[])
