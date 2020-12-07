@@ -192,9 +192,21 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
     })
 
     it('zoom out', () => {
-        cy.log('TODO zooms out')
+
+        let dimsBuff: {height: number, width: number, d: string}[] = [];
 
         //Get base dims
+        cy.get('svg > g > path:first-of-type').then(elems => {
+
+            for(let i = 0; i < elems.length; i++){
+                let dim = {height: 0, width: 0, d: ''}
+                dim.height = elems.eq(i).height() as number;
+                dim.width = elems.eq(i).width() as number;
+                dim.d = elems.eq(i).attr('d') as string;
+                dimsBuff.push(dim);
+            }
+
+        })
 
         //do zoom once
         cy.get('[title=\'Zoom out\'][role=button]')
@@ -202,12 +214,42 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
             .wait(1000) //wait for zoom to load
 
         //Compare new dims
+        cy.get('svg > g > path:first-of-type').then(elems => {
 
+            for(let i = 1; i < elems.length; i++){
+                let dim = {height: 0, width: 0, d: ''}
+                if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
+                    dim.height = elems.eq(i).height() as number;
+                    dim.width = elems.eq(i).width() as number;
+                    dim.d = elems.eq(i).attr('d') as string;
+                    expect(dim.height).to.be.lessThan(dimsBuff[i].height);
+                    expect(dim.width).to.be.lessThan(dimsBuff[i].width)
+                    expect(dim.d).to.not.equal(dimsBuff[i].d)
+                    dimsBuff[i] = dim;
+                }
+            }
+        });
         //zoom again
-
+        cy.get('[title=\'Zoom out\'][role=button]')
+            .click()
+            .wait(1000) //wait for zoom to load
 
         //Compare new dims
+        cy.get('svg > g > path:first-of-type').then(elems => {
 
+            for(let i = 1; i < elems.length; i++){
+                let dim = {height: 0, width: 0, d: ''}
+                if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
+                    dim.height = elems.eq(i).height() as number;
+                    dim.width = elems.eq(i).width() as number;
+                    dim.d = elems.eq(i).attr('d') as string;
+                    expect(dim.height).to.be.lessThan(dimsBuff[i].height);
+                    expect(dim.width).to.be.lessThan(dimsBuff[i].width)
+                    expect(dim.d).to.not.equal(dimsBuff[i].d)
+                    dimsBuff[i] = dim;
+                }
+            }
+        });
     })
 
 })
