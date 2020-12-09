@@ -230,6 +230,37 @@ export const datagenFromLPFixture = (lpFile: string, timeDif?: string, stagger?:
     });
 }
 
+export const compareCanvasElementToFile = (path: string, index = 0, mimeType = 'image/png') => {
+    if(!path.match(/.*\.(png|PNG)$/)){
+        throw `unhandled file extension.  Currently only handles .png`
+    }
+
+    cy.readFile(path, 'base64').then(contents => {
+        cy.get('canvas').then(elem => {
+            let b64 = elem.get(index).toDataURL(mimeType);
+            let b64Trim = b64.replace(/^data:image\/png;base64,/, "");
+            expect(b64Trim).to.equal(contents);
+        })
+    })
+}
+
+/*
+* Utility command, to sometimes update base images for visual comparison tests
+* */
+export const saveCanvasToPNG = (path: string, index = 0) => {
+    if(!path.match(/.*\.(png|PNG)$/)){
+        throw `unhandled file extension.  Currently only handles .png`
+    }
+
+    cy.get('canvas').then(elem => {
+        let b64 = elem.get(index).toDataURL('image/png');
+        let b64Trim = b64.replace(/^data:image\/png;base64,/, "");
+        let img = new Buffer(b64Trim, 'base64').toString('binary');
+
+        cy.writeFile(path, img, 'binary')
+    })
+}
+
 Cypress.Commands.add("addTimestampToRecs", addTimestampToRecs);
 Cypress.Commands.add("datagenFromLPFixture", datagenFromLPFixture);
 Cypress.Commands.add("echoValue", echoValue);
@@ -241,3 +272,5 @@ Cypress.Commands.add('calcElementDistance',calcElementDistance)
 Cypress.Commands.add('calcVisibleElements', calcVisibleElements)
 Cypress.Commands.add('calcHiddenElements',calcHiddenElements)
 Cypress.Commands.add('resetDB', resetDB)
+Cypress.Commands.add('compareCanvasElementToFile', compareCanvasElementToFile)
+Cypress.Commands.add('saveCanvasToPNG', saveCanvasToPNG)

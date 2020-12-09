@@ -10,7 +10,9 @@ import {
     calcElementDistance,
     calcHiddenElements,
     calcVisibleElements,
-    resetDB
+    resetDB,
+    compareCanvasElementToFile,
+    saveCanvasToPNG
 } from './support/commands'
 
 declare global {
@@ -27,6 +29,8 @@ declare global {
             calcHiddenElements: typeof calcHiddenElements
             calcVisibleElements: typeof calcVisibleElements
             resetDB: typeof resetDB
+            compareCanvasElementToFile: typeof compareCanvasElementToFile
+            saveCanvasToPNG: typeof saveCanvasToPNG
         }
     }
 }
