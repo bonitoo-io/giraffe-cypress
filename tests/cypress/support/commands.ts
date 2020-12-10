@@ -230,6 +230,20 @@ export const datagenFromLPFixture = (lpFile: string, timeDif?: string, stagger?:
     });
 }
 
+//use this because mocha .to.equal() can hang on long base64 strings
+function quickStringCompare(s1: string, s2: string){
+    if(s1.length !== s2.length){
+        return false
+    }
+    for(let i = 0; i < s1.length; i++){
+        if(s1.charAt(i) !== s2.charAt(i)){
+            cy.log('DEBUG failed at ' + i)
+            return false
+        }
+    }
+    return true;
+}
+
 export const compareCanvasElementToFile = (path: string, index = 0, mimeType = 'image/png') => {
     if(!path.match(/.*\.(png|PNG)$/)){
         throw `unhandled file extension.  Currently only handles .png`
@@ -239,7 +253,9 @@ export const compareCanvasElementToFile = (path: string, index = 0, mimeType = '
         cy.get('canvas').then(elem => {
             let b64 = elem.get(index).toDataURL(mimeType);
             let b64Trim = b64.replace(/^data:image\/png;base64,/, "");
-            expect(b64Trim).to.equal(contents);
+            //expect(b64Trim).to.equal(contents);
+            expect(quickStringCompare(b64Trim,contents)).to.equal(true,
+                `Canvas should match ${path}`)
         })
     })
 }
