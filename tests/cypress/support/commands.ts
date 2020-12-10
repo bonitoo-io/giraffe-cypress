@@ -231,6 +231,7 @@ export const datagenFromLPFixture = (lpFile: string, timeDif?: string, stagger?:
 }
 
 //use this because mocha .to.equal() can hang on long base64 strings
+// when they do not match
 function quickStringCompare(s1: string, s2: string){
     if(s1.length !== s2.length){
         return false
