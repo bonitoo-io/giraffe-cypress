@@ -237,7 +237,6 @@ function quickStringCompare(s1: string, s2: string){
     }
     for(let i = 0; i < s1.length; i++){
         if(s1.charAt(i) !== s2.charAt(i)){
-            cy.log('DEBUG failed at ' + i)
             return false
         }
     }
