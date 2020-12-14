@@ -24,10 +24,10 @@ export default function Home({data}){
     return(
         <div>
             <Head>
-                <title>Simple Map With Tracks</title>
+                <title>Simple Heatmap</title>
             </Head>
             <section style={{height:"608px", width: "608px" }}>
-                <p>Simple Map With Tracks</p>
+                <p>Simple Heatmap</p>
                 <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}
                      data-testid='geowidget-tracks'>
                     <GiraffeGeoHeatMapBasic data={data}/>

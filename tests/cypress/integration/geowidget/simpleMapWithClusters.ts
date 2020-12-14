@@ -245,7 +245,7 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
         //TODO better wait
           //zoom in on only cluster remaining
-        cy.get('.marker-cluster-custom').eq(0).click().wait(2000) // level 13 - visible 0 cluster 4 markers
+        cy.get('.marker-cluster-custom').eq(0).click().wait(3000) // level 13 - visible 0 cluster 4 markers
         //cy.get('.marker-cluster-custom').eq(0).click().should('not.exist') // e,g wait for marker to detach
 
         //verify new map level

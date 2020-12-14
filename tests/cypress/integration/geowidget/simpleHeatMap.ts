@@ -6,7 +6,7 @@ before(() => {
 describe('GeoWidget - Basic - HeatMap', () => {
 
     before('Load Data', () => {
-        cy.datagenFromLPFixture('influx/futuroscope02.lp', '-60m', '1m')
+        cy.datagenFromLPFixture('influx/futuroscope02.lp')
         cy.wait(1000) //wait for backend to process data
     })
 

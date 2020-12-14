@@ -1,5 +1,4 @@
-
-interface dimSVG {height: number, width: number, d: string}
+import { dimSVG } from './helperTypes'
 
 before(() => {
     cy.resetDB();
