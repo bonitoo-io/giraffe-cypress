@@ -121,7 +121,7 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
 
     })
 
-    it('zooms in - Chrome', { browser: '!firefox'}, () => {
+    it('zooms in',  () => {
         cy.log('Zoom in')
         let dimsBuff: dimSVG[] = [];
 
@@ -194,8 +194,8 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
         })
     })
 
-    it('zooms out - Chrome', {browser: '!firefox'}, () => {
-        cy.log('Zoom out')
+    it('zooms out', () => {
+
         let lvl8Dist=0
         cy.get('.svg-icon > svg').then(icons => {
             cy.calcElementDistance(icons[9],icons[28]).then(dist => {
@@ -251,8 +251,88 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
                 }
             }
         });
+    })
 
+    it.only('pans horizontally', () => {
+        //TODO add checks for tracks
+        let baseDist = 0;
+        //check distance before pan
+        cy.get('.svg-icon > svg').then(icons => {
+            cy.calcElementDistance(icons[9],icons[28]).then(dist => {
+                baseDist=dist;
+            })
+        })
 
+        let dims: {height: number,
+            width: number,
+            left: number,
+            top: number} = {height: 0, width: 0, left: 0, top: 0}
+
+        cy.get('div.giraffe-plot').then(container => {
+            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+            dims.height = container.height() as number;
+            dims.width = container.width() as number;
+            let offset: JQuery.Coordinates | undefined = container.offset();
+            dims.top = offset === undefined ? 0 : offset.top;
+            dims.left = offset === undefined ? 0 : offset.left;
+        }).wait(1000)
+            .then(() => {
+                cy.log('DEBUG dims ' + JSON.stringify(dims));
+
+                // pan away
+                cy.pan('.giraffe-plot', {x: dims.width / 2, y: dims.height / 2}, {
+                    x: dims.width - 2,
+                    y: dims.height / 2
+                })
+                    .wait(500)
+
+                //Check only 13 markers are visible
+                cy.get('.leaflet-container').then(container => {
+                    cy.get('.svg-icon > svg').then(elems => {
+
+                        cy.calcVisibleElements(container,elems).then(count => {
+                            expect(count).to.equal(13)
+                        })
+
+                        cy.calcHiddenElements(container,elems).then(count => {
+                            expect(count).to.equal(18)
+                        })
+                    })
+                })
+
+                //Check distance unchanged
+                cy.get('.svg-icon > svg').then(icons => {
+                    cy.calcElementDistance(icons[9],icons[28]).then(dist => {
+                        expect(dist).to.equal(baseDist);
+                    })
+                })
+
+                //pan back
+                cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:2,y:dims.height/2})
+                    .wait(500)
+
+                //Check all 31 markers are visible
+                cy.get('.leaflet-container').then(container => {
+                    cy.get('.svg-icon > svg').then(elems => {
+
+                        cy.calcVisibleElements(container,elems).then(count => {
+                            expect(count).to.equal(31)
+                        })
+
+                        cy.calcHiddenElements(container,elems).then(count => {
+                            expect(count).to.equal(0)
+                        })
+                    })
+                })
+
+                //Check distance unchanged
+                cy.get('.svg-icon > svg').then(icons => {
+                    cy.calcElementDistance(icons[9],icons[28]).then(dist => {
+                        expect(dist).to.equal(baseDist);
+                    })
+                })
+
+            })
 
     })
 })
