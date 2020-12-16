@@ -55,7 +55,6 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
 
         cy.get('svg > g > path:first-of-type').then(elems => {
             for(let i = 1; i < elems.length; i++){
-                cy.log('DEBUG elem dim ' + elems[i].getBoundingClientRect().width / elems[i].getBoundingClientRect().height );
                 expect(elems[i]).to.have.css('stroke', expectedStrokeColors[i])
                 expect(elems[i]).to.have.css('height', expectedDims[i].height);
                 expect(elems[i]).to.have.css('width', expectedDims[i].width);
@@ -122,7 +121,6 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
     })
 
     it('zooms in',  () => {
-        cy.log('Zoom in')
         let dimsBuff: dimSVG[] = [];
 
         //Get base dims
@@ -285,7 +283,6 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -293,7 +290,6 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
             .then(() => {
-                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
                 // pan away
                 cy.pan('.giraffe-plot', {x: dims.width / 2, y: dims.height / 2}, {
@@ -469,7 +465,7 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -477,7 +473,6 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
             .then(() => {
-                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
                 // pan away
                 cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width/2,y:dims.height - 2})
@@ -617,4 +612,55 @@ describe('GeoWidget - Basic - Tracks and Markers', () => {
             })
 
     })
+
+    it('shows a tooltip on focus', () => {
+        let svgloc: DOMRect;
+        let containerloc: DOMRect;
+
+        //N.B. it seems 'cy.trigger()' only fires events, it does not
+        //    'emulate' the cursor.  Popups may not appear in
+        //    screenshots or videos because popups follow the actual
+        //    cursor.  But the DOM is (should be) changed.
+        //
+        //will need container rectangle to calculate mouse event locations
+        cy.get('.leaflet-container').then(container => {
+            containerloc = container[0].getBoundingClientRect();
+            //check a handful of  markers
+            for(let i = 7; i < 17; i += 2) {
+                cy.get('.svg-icon').eq(i).then(svg => {
+                    svgloc = svg[0].getBoundingClientRect();
+                    svgloc.x = (svgloc.x + (svgloc.width / 2)) - containerloc.x;
+                    svgloc.y = (svgloc.y + (svgloc.height / 2)) - containerloc.y;
+
+                    cy.get('[data-testid=giraffe-tooltip]').should('not.exist')
+                    cy.get('.leaflet-container').trigger('mouseover', svgloc.x, svgloc.y)
+                    cy.get('[data-testid=giraffe-tooltip]').should('exist')
+                    //check tooltip contents
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+                        .eq(0).then($header => {
+                        expect($header.text()).to.equal('Time')
+                    })
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-header')
+                        .eq(1).then($header => {
+                        expect($header.text()).to.equal('Duration')
+                    })
+                    // check Time value
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+                        .eq(0).then($value => {
+                        expect($value.text()).to.match(/\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:[0-5]\d{1}:[0-5]\d{1} [A|P]M/)
+                    })
+                    //check Duration value
+                    cy.get('[data-testid=giraffe-tooltip]').find('.giraffe-tooltip-column-value')
+                        .eq(1).then($value => {
+                        expect($value.text()).to.match(/\d{1,12}/)
+                    })
+                    //leave the marker
+                    cy.get('.leaflet-container').trigger('mouseout', svgloc.x, svgloc.y)
+
+                })
+            }
+        })
+
+    })
+
 })
