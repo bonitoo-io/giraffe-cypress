@@ -205,7 +205,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
                 })
             })
         }).then(() => {
-            cy.log('DEBUG baseDist ' + baseDist)
+            //cy.log('DEBUG baseDist ' + baseDist)
         })
 
         let dims: {height: number,
@@ -213,7 +213,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -221,7 +221,6 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
             .then(() => {
-                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
                 // pan away
                 cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width - 2,y:dims.height/2})
@@ -300,7 +299,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
                 })
             })
         }).then(() => {
-            cy.log('DEBUG baseDist ' + baseDist)
+            //cy.log('DEBUG baseDist ' + baseDist)
         })
 
         let dims: {height: number,
@@ -308,7 +307,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -316,7 +315,6 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
             .then(() => {
-                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
                 // pan away
                 cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width/2,y:dims.height - 2})

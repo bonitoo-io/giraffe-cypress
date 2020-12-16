@@ -109,7 +109,7 @@ describe('GeoWidget - Basic - HeatMap', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -145,7 +145,7 @@ describe('GeoWidget - Basic - HeatMap', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -181,7 +181,7 @@ describe('GeoWidget - Basic - HeatMap', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -216,7 +216,7 @@ describe('GeoWidget - Basic - HeatMap', () => {
             top: number} = {height: 0, width: 0, left: 0, top: 0}
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
+
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();

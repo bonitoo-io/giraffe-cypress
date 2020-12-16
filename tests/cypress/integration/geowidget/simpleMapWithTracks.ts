@@ -47,7 +47,6 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
 
         cy.get('svg > g > path:first-of-type').then(elems => {
             for(let i = 1; i < elems.length; i++){
-                cy.log('DEBUG elem dim ' + elems[i].getBoundingClientRect().width / elems[i].getBoundingClientRect().height );
                 expect(elems[i]).to.have.css('stroke', expectedStrokeColors[i])
                 //TODO - firefox renders with different dimensions -
                 // perhaps just check aspect ratio
@@ -162,12 +161,13 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
 
             for(let i = 1; i < elems.length; i++){
                 let dim = {height: 0, width: 0, d: ''}
+                /*
                 cy.log('DEBUG dim ' + elems.eq(i).is(':visible')
                     + ' '
                     + elems.eq(i).attr('d') + ' [' +
                     elems.eq(i).height() + ' ' +
                     elems.eq(i).width() + ']'
-                )
+                )*/
                 if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
                     dim.height = elems.eq(i).height() as number;
                     dim.width = elems.eq(i).width() as number;
@@ -297,7 +297,6 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         })
 
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
@@ -305,7 +304,6 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
             .then(() => {
-                cy.log('DEBUG dims ' + JSON.stringify(dims));
 
                 // pan away
                 cy.pan('.giraffe-plot',{x:dims.width/2,y:dims.height/2},{x:dims.width - 2,y:dims.height/2})
@@ -426,7 +424,6 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
         cy.get('div.giraffe-plot').then(container => {
-            cy.log('DEBUG typeof container.height() ' + typeof(container.height()));
             dims.height = container.height() as number;
             dims.width = container.width() as number;
             let offset: JQuery.Coordinates | undefined = container.offset();
