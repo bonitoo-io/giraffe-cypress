@@ -1,5 +1,5 @@
 #!./node_modules/.bin/ts-node
-const fs = require('fs')
+import * as fs from 'fs'
 
 //copy data source files to fixtures - to avoid hacking cypress to reach data dirs outside tests module
 try {
@@ -12,7 +12,7 @@ try {
         process.exit(1);
     }
 }
-let files = fs.readdirSync(`${__dirname}/../../data/sources`).filter(fn => fn.endsWith('.lp'))
+const files = fs.readdirSync(`${__dirname}/../../data/sources`).filter(fn => fn.endsWith('.lp'))
 console.log('------ Copying to fixtures line protocol files: ' + files);
 
 files.forEach(file => {
@@ -27,20 +27,20 @@ files.forEach(file => {
 
 console.log('------ Copying influx_env.sh values to fixtures/influxEnv.json');
 //copy over env vars into fixture file
-let fixtureFile = `${__dirname}/../cypress/fixtures/influx/influxEnv.json`
+const fixtureFile = `${__dirname}/../cypress/fixtures/influx/influxEnv.json`
 
 const data = fs.readFileSync(`${__dirname}/../../scripts/influx_env.sh`, 'utf-8')
 const lines = data.split('\n');
-let fixture = {};
+const fixture = {};
 
 lines.forEach((line) => {
     if (line.trim().startsWith('export')) {
-        let keyVal = line.trim().split(' ')[1].split('=');
+        const keyVal = line.trim().split(' ')[1].split('=');
         fixture[[keyVal[0].split('_')[1].toLowerCase()] as unknown as string] = keyVal[1];
     }
 });
 
-let fixtureOut = JSON.stringify(fixture, null, 2);
+const fixtureOut = JSON.stringify(fixture, null, 2);
 
 fs.writeFile(fixtureFile, fixtureOut, err => {
     if(err){

@@ -1,12 +1,12 @@
 #!./node_modules/.bin/ts-node
 
-const JUnitReportMerger = require('junit-report-merger')
-const fs = require('fs')
+import * as JUnitReportMerger from 'junit-report-merger'
+import * as fs from 'fs'
 
-let sourceFiles = [];
-let cwd = process.cwd();
+const sourceFiles = [];
+const cwd = process.cwd();
 let sourceDir = `${cwd}/results/`
-let args =  process.argv.slice(2)
+const args =  process.argv.slice(2)
 let outputFile = `${cwd}/results/test-results.xml`
 
 for(let i = 0; i < args.length; i++){

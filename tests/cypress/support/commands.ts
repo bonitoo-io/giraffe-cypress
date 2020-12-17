@@ -1,5 +1,7 @@
 import * as DataUtil from 'giraffe-cypress-data'
 
+//TODO - lint me
+
 // @ts-ignore
 //const projRootDir = path.dirname(require.main.filename)
 
@@ -29,7 +31,7 @@ import * as DataUtil from 'giraffe-cypress-data'
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-export const resetDB = () => {
+export const resetDB = (): void => {
 
     cy.fixture('influx/influxEnv').then(({url, username, password, org, bucket, token}) => {
         cy.request(`${url}/debug/flush`);
@@ -152,7 +154,7 @@ export const calcElementDistance = (e1: Element, e2: Element): Cypress.Chainable
     return cy.wrap(result)
 }
 
-export const elementIsInBounds = (container: HTMLElement, elem: HTMLElement) => {
+export const elementIsInBounds = (container: HTMLElement, elem: HTMLElement): boolean => {
     let containerDims = container.getBoundingClientRect();
     let elemDims = elem.getBoundingClientRect();
     return ! (elemDims.x > (containerDims.x + containerDims.width) ||
