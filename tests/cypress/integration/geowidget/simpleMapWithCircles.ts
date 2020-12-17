@@ -24,8 +24,8 @@ describe('GeoWidget - Basic - Map with Circles', () => {
         cy.wait(1500)
             .document()
             .then(doc => {
-            let styles = doc.querySelectorAll('style');
-            styles.forEach((style, index ) => {
+            const styles = doc.querySelectorAll('style');
+            styles.forEach((style) => {
                 if(style.textContent && style.textContent.includes('.leaflet-container')){
                     hasLeaflet = true;
                 }
@@ -208,7 +208,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             //cy.log('DEBUG baseDist ' + baseDist)
         })
 
-        let dims: {height: number,
+        const dims: {height: number,
             width: number,
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
@@ -216,7 +216,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
 
             dims.height = container.height() as number;
             dims.width = container.width() as number;
-            let offset: JQuery.Coordinates | undefined = container.offset();
+            const offset: JQuery.Coordinates | undefined = container.offset();
             dims.top = offset === undefined ? 0 : offset.top;
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
@@ -302,7 +302,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
             //cy.log('DEBUG baseDist ' + baseDist)
         })
 
-        let dims: {height: number,
+        const dims: {height: number,
             width: number,
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
@@ -310,7 +310,7 @@ describe('GeoWidget - Basic - Map with Circles', () => {
 
             dims.height = container.height() as number;
             dims.width = container.width() as number;
-            let offset: JQuery.Coordinates | undefined = container.offset();
+            const offset: JQuery.Coordinates | undefined = container.offset();
             dims.top = offset === undefined ? 0 : offset.top;
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)

@@ -94,14 +94,14 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
     })
 
     it('shows cluster marker count at level 8', () => {
-        let expectedCounts = [9,10,5,13,3,10,4,5]
+        const expectedCounts = [9,10,5,13,3,10,4,5]
         for(let i = 0; i < 8; i++){
             cy.get('div.marker-cluster-custom > div > div').eq(i).contains(expectedCounts[i]);
         }
     })
 
     it('shows cluster group colors at level 8', () => {
-        let expectedColors = ['rgb(255, 79, 0)',
+        const expectedColors = ['rgb(255, 79, 0)',
             'rgb(255, 211, 0)',
             'rgb(255, 79, 0)',
             'rgb(255, 79, 0)',

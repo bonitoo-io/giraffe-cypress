@@ -112,13 +112,13 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
     //TODO adjust for firefox - has max dim height||width of svg container 730.6844496.....
     it('zooms in', {browser: '!firefox'}, () => {
 
-        let dimsBuff: dimSVG[] = [];
+        const dimsBuff: dimSVG[] = [];
 
         //Get base dims
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 0; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 dim.height = elems.eq(i).height() as number;
                 dim.width = elems.eq(i).width() as number;
                 dim.d = elems.eq(i).attr('d') as string;
@@ -136,7 +136,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 1; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
                     dim.height = elems.eq(i).height() as number;
                     dim.width = elems.eq(i).width() as number;
@@ -160,7 +160,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 1; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 /*
                 cy.log('DEBUG dim ' + elems.eq(i).is(':visible')
                     + ' '
@@ -195,13 +195,13 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
 
     it('zoom out', () => {
 
-        let dimsBuff: dimSVG[] = [];
+        const dimsBuff: dimSVG[] = [];
 
         //Get base dims
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 0; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 dim.height = elems.eq(i).height() as number;
                 dim.width = elems.eq(i).width() as number;
                 dim.d = elems.eq(i).attr('d') as string;
@@ -219,7 +219,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 1; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
                     dim.height = elems.eq(i).height() as number;
                     dim.width = elems.eq(i).width() as number;
@@ -240,7 +240,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 1; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 if(elems.eq(i).is(':visible') && elems.eq(i).attr('d') != 'M0 0'){
                     dim.height = elems.eq(i).height() as number;
                     dim.width = elems.eq(i).width() as number;
@@ -256,12 +256,12 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
 
     //see giraffe issue #403
     it.skip("shows tooltips on tracks", () => {
-
+        cy.log('waiting on issue 403')
     })
 
     //see giraffe issue #403
     it.skip("shows tooltips on endpoints", () => {
-
+        cy.log('waiting on issue 403')
     })
 
     /*
@@ -276,10 +276,10 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
      */
     it("pans horizontally", () => {
 
-        let dimsBuff: dimSVG[] = [];
-        let unchangedTrackColors = ['brown', 'deeppink']
+        const dimsBuff: dimSVG[] = [];
+        const unchangedTrackColors = ['brown', 'deeppink']
 
-        let dims: {height: number,
+        const dims: {height: number,
             width: number,
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
@@ -288,7 +288,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 0; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 dim.height = elems.eq(i).height() as number;
                 dim.width = elems.eq(i).width() as number;
                 dim.d = elems.eq(i).attr('d') as string;
@@ -299,7 +299,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         cy.get('div.giraffe-plot').then(container => {
             dims.height = container.height() as number;
             dims.width = container.width() as number;
-            let offset: JQuery.Coordinates | undefined = container.offset();
+            const offset: JQuery.Coordinates | undefined = container.offset();
             dims.top = offset === undefined ? 0 : offset.top;
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
@@ -329,7 +329,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
                 cy.get('svg > g > path:first-of-type').then(elems => {
 
                     for(let i = 1; i < elems.length; i++){
-                        let dim = {height: 0, width: 0, d: ''}
+                        const dim = {height: 0, width: 0, d: ''}
                         dim.height = elems.eq(i).height() as number;
                         dim.width = elems.eq(i).width() as number;
                         dim.d = elems.eq(i).attr('d') as string;
@@ -374,7 +374,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
                 cy.get('svg > g > path:first-of-type').then(elems => {
 
                     for(let i = 1; i < elems.length; i++){
-                        let dim = {height: 0, width: 0, d: ''}
+                        const dim = {height: 0, width: 0, d: ''}
                         dim.height = elems.eq(i).height() as number;
                         dim.width = elems.eq(i).width() as number;
                         dim.d = elems.eq(i).attr('d') as string;
@@ -403,14 +403,14 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
 
     it('pans vertically', () => {
 
-        let dimsBuff: dimSVG[] = [];
-        let unchangedTrackColors = ['green', 'red', 'black', 'deeppink']
+        const dimsBuff: dimSVG[] = [];
+        const unchangedTrackColors = ['green', 'red', 'black', 'deeppink']
 
         //Get base dims
         cy.get('svg > g > path:first-of-type').then(elems => {
 
             for(let i = 0; i < elems.length; i++){
-                let dim = {height: 0, width: 0, d: ''}
+                const dim = {height: 0, width: 0, d: ''}
                 dim.height = elems.eq(i).height() as number;
                 dim.width = elems.eq(i).width() as number;
                 dim.d = elems.eq(i).attr('d') as string;
@@ -419,14 +419,14 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
         })
 
 
-        let dims: {height: number,
+        const dims: {height: number,
             width: number,
             left: number,
             top: number} = {height: 0, width: 0, left: 0, top: 0}
         cy.get('div.giraffe-plot').then(container => {
             dims.height = container.height() as number;
             dims.width = container.width() as number;
-            let offset: JQuery.Coordinates | undefined = container.offset();
+            const offset: JQuery.Coordinates | undefined = container.offset();
             dims.top = offset === undefined ? 0 : offset.top;
             dims.left = offset === undefined ? 0 : offset.left;
         }).wait(1000)
@@ -453,7 +453,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
                 cy.get('svg > g > path:first-of-type').then(elems => {
 
                     for(let i = 1; i < elems.length; i++){
-                        let dim = {height: 0, width: 0, d: ''}
+                        const dim = {height: 0, width: 0, d: ''}
                         dim.height = elems.eq(i).height() as number;
                         dim.width = elems.eq(i).width() as number;
                         dim.d = elems.eq(i).attr('d') as string;
@@ -499,7 +499,7 @@ describe('GeoWidget - Basic - Map with Tracks', () => {
                 cy.get('svg > g > path:first-of-type').then(elems => {
 
                     for(let i = 1; i < elems.length; i++){
-                        let dim = {height: 0, width: 0, d: ''}
+                        const dim = {height: 0, width: 0, d: ''}
                         dim.height = elems.eq(i).height() as number;
                         dim.width = elems.eq(i).width() as number;
                         dim.d = elems.eq(i).attr('d') as string;
