@@ -70,7 +70,7 @@ build_giraffe(){
   if [[ -d $INFLUX_DIR_ABS/giraffe/giraffe ]]; then
      cd ${INFLUX_DIR_ABS}/giraffe/giraffe || echo "failed to cd ${INFLUX_DIR_ABS}/giraffe/giraffe"
      git checkout $GIRAFFE_GITHUB_BRANCH
-     if [[ -v COMMIT ]]; then
+     if [[ -n ${COMMIT+x} ]]; then
        echo "  === Checking out commit ${COMMIT}"
        git checkout ${COMMIT}
        ckout_status=$?
