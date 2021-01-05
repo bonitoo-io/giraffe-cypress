@@ -17,7 +17,7 @@ The testing cycle is comprised of three basic tasks.
 
 1) Setup the application
 
-`$ scripts/setup.sh`
+`$ scripts/setup.sh create`
 
 2) When preparing tests and inspecting the applications, add test data
 
@@ -53,18 +53,19 @@ The application can be configured and started using the `setup.sh` script in the
 
 The `setup.sh` script accepts six commands. 
 
-   * `create` - (Default) creates and launches the Nextjs application
+   * `create` - creates and launches the Nextjs application
    * `clean` - Removes Giraffe from the application
    * `shutdown` - Shuts down the application
    * `data` - Builds and links in the data module.  Useful during development. 
    * `influx` - Reinstalls the Influx docker backend database. 
-   * `reporting` - Sets up linked directories for Cypress reporting.  Used mainly in test scripts. 
+   * `reporting` - Sets up linked directories for Cypress reporting.  Used mainly in test scripts.
+   * `help` - (default) shows the usage message
 
 **Start**
 
 In dev mode (for adding elements) 
 
-`$ scripts/setup.sh`
+`$ scripts/setup.sh create`
 
 In production mode (for testing)
 
@@ -76,17 +77,17 @@ The script installs Giraffe either from the release of from a local build checke
 
 To link in the latest release
 
-`scripts/setup.sh -d release` 
+`scripts/setup.sh create -d release` 
 
 Specific release (`-r, --release`), tag (`-t, --tag`) and version (`-v, --version`) can also be specified. 
 
 To build Giraffe locally from the github project, use the default. 
 
-`scripts/setup.sh` 
+`scripts/setup.sh create` 
 
 Or to be more verbose use the flag(`-d`, `--dist`): 
 
-`scripts/setup.sh --dist local`
+`scripts/setup.sh create --dist local`
 
 A specific git url can also be specified using the flag (`-u, --url`).  Specific branches can also be declared (`-b`, `--branch`); 
 
