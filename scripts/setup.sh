@@ -28,6 +28,8 @@ check_env(){
   echo "==== Checking Environment ===="
   DOCKER_REQVER="19.3"
   DOCKER_VER=$(docker --version | awk '{print $3}')
+  YARN_VER=$(yarn --version)
+  YARN_REQVER="1.18.0"
 
   if [ "$(printf '%s\n' "$DOCKER_REQVER" "$DOCKER_VER" | sort -V | head -n1)" = "$DOCKER_REQVER" ]; then
         echo "Docker version ${DOCKER_VER} OK"
@@ -35,6 +37,13 @@ check_env(){
         echo "This script requires ${DOCKER_REQVER} or greater.  Aborting."
         exit 0;
  fi
+ echo YARN_VER ${YARN_VER}
+ # Ran into yarn issue 7807 - downgrade yarn 
+ if [ "${YARN_VER}" != "${YARN_REQVER}" ]; then
+   echo "Resetting yarn version to ${YARN_REQVER}"
+   yarn policies set-version ${YARN_REQVER}
+ fi
+
 }
 
 make_influx_dir(){
