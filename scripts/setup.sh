@@ -26,7 +26,7 @@ INFLUX_LOG_FILE=${INFLUX_LOG_DIR}/docker.log
 
 check_env(){
   echo "==== Checking Environment ===="
-  DOCKER_REQVER="19.4.0,"
+  DOCKER_REQVER="19.3.0,"
   DOCKER_VER=$(docker --version | awk '{print $3}')
   YARN_VER=$(yarn --version)
   YARN_REQVER="1.18.0"
