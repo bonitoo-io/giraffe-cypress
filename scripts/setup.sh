@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PRJ_ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[1]}" )" >/dev/null 2>&1 && pwd )"
 INFLUX_DIR=influxdata
 INFLUX_DIR_ABS="$PRJ_ROOT/$INFLUX_DIR"
 #GIRAFFE_GITHUB_URL="https://github.com/dubsky/giraffe.git"
