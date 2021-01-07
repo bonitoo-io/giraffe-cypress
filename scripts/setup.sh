@@ -3,9 +3,7 @@
 PRJ_ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
 INFLUX_DIR=influxdata
 INFLUX_DIR_ABS="$PRJ_ROOT/$INFLUX_DIR"
-#GIRAFFE_GITHUB_URL="https://github.com/dubsky/giraffe.git"
 GIRAFFE_GITHUB_URL="https://github.com/influxdata/giraffe.git"
-#GIRAFFE_GITHUB_BRANCH="feat/geo"
 GIRAFFE_GITHUB_BRANCH="master"
 GIRAFFE_DIST="@influxdata/giraffe"
 GIRAFFE_VERSION=""
@@ -13,7 +11,7 @@ GIRAFFE_TAG=""
 ACTION="usage"
 # TYPE can be "build" - e.g. from local build or "release" - e.g. official distribution
 DIST="local"
-# TYPE can be "dev" or "prod" e.g. production
+# APP_BUILD can be "dev" or "prod" e.g. production
 APP_BUILD="dev"
 APP_LOG_FILE="${PRJ_ROOT}/app/next.log"
 
@@ -210,23 +208,6 @@ create_app(){
    setup_docker_influx
 
    start_app
-#   cd ${PRJ_ROOT}/app || exit 1
-
-#   echo "===== STARTING NEXTJS APP ====="
-#   if [[ "${APP_BUILD}" = "dev" ]]; then
-#       echo "======== Running in Dev Mode ===="
-#       yarn dev > ${APP_LOG_FILE} 2>&1 &
-#       echo $!
-#   elif [[  "${APP_BUILD}" = "prod" ]]; then
-#       echo "======== Running in Production Mode ===="
-
-#       yarn build
-#       yarn start > ${APP_LOG_FILE} 2>&1 &
-#       exit_status=$?
-#       echo "exit_status ${exit_status}"
-#   fi
-
-#   cd - || exit 1
 }
 
 start_app(){
@@ -236,7 +217,6 @@ start_app(){
    yarn install
    yarn build
 
-   #export FOO=BARBAR;
    echo "===== STARTING NEXTJS APP ====="
    if [[ "${APP_BUILD}" = "dev" ]]; then
        echo "======== Running in Dev Mode ===="
@@ -442,9 +422,6 @@ done
 echo "DIST $DIST"
 
 check_env
-
-# TODO - check whether Giraffe Package is to be from Current Github w. branch e.g. file:/...
-# Or whether Giraffe Package is to be the released package - once GeoWidget is released
 
 case $ACTION in
    create )      echo "====== Creating App ======"
