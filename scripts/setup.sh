@@ -26,17 +26,27 @@ INFLUX_LOG_FILE=${INFLUX_LOG_DIR}/docker.log
 
 check_env(){
   echo "==== Checking Environment ===="
-  DOCKER_REQVER="19.3.0,"
+  DOCKER_REQVER="19.3.3"
   DOCKER_VER=$(docker --version | awk '{print $3}')
   YARN_VER=$(yarn --version)
   YARN_REQVER="1.18.0"
 
+  echo "Detected docker version ${DOCKER_VER}"
+
   if [ "$(printf '%s\n' "$DOCKER_REQVER" "$DOCKER_VER" | sort -V | head -n1)" = "$DOCKER_REQVER" ]; then
         echo "Docker version ${DOCKER_VER} OK"
- else
-        echo "This script requires docker ${DOCKER_REQVER} or greater.  Aborting."
-        exit 0;
- fi
+  else
+      if [ "$USER" != "root" ]; then
+            echo "This script requires docker."
+            echo "When using a version earlier than ${DOCKER_REQVER} is must be run using sudo or as root."
+            echo "Aborting."
+            exit 1;
+      else
+            echo "Detected docker is earlier than ${DOCKER_REQVER}"
+            echo "Continuing as ${USER}..."
+      fi
+  fi
+
  echo YARN_VER ${YARN_VER}
  # Ran into yarn issue 7807 - downgrade yarn
  if [ "${YARN_VER}" != "${YARN_REQVER}" ]; then
@@ -179,7 +189,6 @@ create_from_dist(){
 }
 
 create_app(){
-   check_env
    if [[ "$DIST" = "local" ]]; then
        create_from_local
    elif [[ "$DIST" = "release" ]]; then
@@ -432,6 +441,8 @@ done
 
 echo "DIST $DIST"
 
+check_env
+
 # TODO - check whether Giraffe Package is to be from Current Github w. branch e.g. file:/...
 # Or whether Giraffe Package is to be the released package - once GeoWidget is released
 
@@ -454,8 +465,7 @@ case $ACTION in
    restart )     kill_next_hard
                  start_app
                  ;;
-   influx )      check_env
-                 stop_docker_influx
+   influx )      stop_docker_influx
                  run_docker_influx
                  setup_docker_influx
                  ;;
