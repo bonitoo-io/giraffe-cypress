@@ -1,6 +1,8 @@
 #!/bin/bash
 
-PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[1]}" )" >/dev/null 2>&1 && pwd )"
+#PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[1]}" )" >/dev/null 2>&1 && pwd )"
+# shellcheck disable=SC2164
+PRJ_ROOT="$(dirname "$(cd "$(dirname "$0")"; pwd -P)")"
 INFLUX_DIR=influxdata
 INFLUX_DIR_ABS="$PRJ_ROOT/$INFLUX_DIR"
 GIRAFFE_GITHUB_URL="https://github.com/influxdata/giraffe.git"
@@ -24,6 +26,7 @@ INFLUX_LOG_FILE=${INFLUX_LOG_DIR}/docker.log
 
 check_env(){
   echo "==== Checking Environment ===="
+  echo "PRJ_ROOT ${PRJ_ROOT}"
   DOCKER_REQVER="19.3.3"
   DOCKER_VER=$(docker --version | awk '{print $3}')
   YARN_VER=$(yarn --version)
@@ -454,8 +457,8 @@ case $ACTION in
                  ;;
    usage)        usage
                  ;;
-   check )       check_env
-                 ;;
+   # Just run check_env above and exit
+   check )       ;;
    * )           echo "Unhandled Action $ACTION"
 esac
 
