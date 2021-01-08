@@ -1,8 +1,7 @@
-#!./node_modules/.bin/ts-node
-//todo - remove this script if it is no longer needed
-
-import * as JUnitReportMerger from 'junit-report-merger'
-import * as fs from 'fs'
+#!/usr/bin/env node
+/* eslint-disable */
+const JUnitReportMerger = require('junit-report-merger')
+const fs = require('fs');
 
 const sourceFiles = [];
 const cwd = process.cwd();
