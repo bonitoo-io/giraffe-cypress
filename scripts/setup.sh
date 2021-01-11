@@ -1,19 +1,19 @@
 #!/bin/bash
 
-PRJ_ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+#PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[1]}" )" >/dev/null 2>&1 && pwd )"
+# shellcheck disable=SC2164
+PRJ_ROOT="$(dirname "$(cd "$(dirname "$0")"; pwd -P)")"
 INFLUX_DIR=influxdata
 INFLUX_DIR_ABS="$PRJ_ROOT/$INFLUX_DIR"
-#GIRAFFE_GITHUB_URL="https://github.com/dubsky/giraffe.git"
 GIRAFFE_GITHUB_URL="https://github.com/influxdata/giraffe.git"
-#GIRAFFE_GITHUB_BRANCH="feat/geo"
 GIRAFFE_GITHUB_BRANCH="master"
 GIRAFFE_DIST="@influxdata/giraffe"
 GIRAFFE_VERSION=""
 GIRAFFE_TAG=""
-ACTION="create"
+ACTION="usage"
 # TYPE can be "build" - e.g. from local build or "release" - e.g. official distribution
 DIST="local"
-# TYPE can be "dev" or "prod" e.g. production
+# APP_BUILD can be "dev" or "prod" e.g. production
 APP_BUILD="dev"
 APP_LOG_FILE="${PRJ_ROOT}/app/next.log"
 
@@ -23,6 +23,39 @@ INFLUX_INSTANCE_NAME="influx2_solo"
 INFLUX_HOME="${HOME}/.influxdbv2"
 INFLUX_LOG_DIR=${PRJ_ROOT}/scripts/log
 INFLUX_LOG_FILE=${INFLUX_LOG_DIR}/docker.log
+
+check_env(){
+  echo "==== Checking Environment ===="
+  echo "PRJ_ROOT ${PRJ_ROOT}"
+  DOCKER_REQVER="19.3.3"
+  DOCKER_VER=$(docker --version | awk '{print $3}')
+  YARN_VER=$(yarn --version)
+  YARN_REQVER="1.18.0"
+
+  echo "Detected docker version ${DOCKER_VER}"
+
+  if [ "$(printf '%s\n' "$DOCKER_REQVER" "$DOCKER_VER" | sort -V | head -n1)" = "$DOCKER_REQVER" ]; then
+        echo "Docker version ${DOCKER_VER} OK"
+  else
+      if [ "$USER" != "root" ]; then
+            echo "This script requires docker."
+            echo "When using a version earlier than ${DOCKER_REQVER} is must be run using sudo or as root."
+            echo "Aborting."
+            exit 1;
+      else
+            echo "Detected docker is earlier than ${DOCKER_REQVER}"
+            echo "Continuing as ${USER}..."
+      fi
+  fi
+
+ echo YARN_VER ${YARN_VER}
+ # Ran into yarn issue 7807 - downgrade yarn
+ if [ "${YARN_VER}" != "${YARN_REQVER}" ]; then
+   echo "Resetting yarn version to ${YARN_REQVER}"
+   yarn policies set-version ${YARN_REQVER}
+ fi
+
+}
 
 make_influx_dir(){
 
@@ -178,23 +211,6 @@ create_app(){
    setup_docker_influx
 
    start_app
-#   cd ${PRJ_ROOT}/app || exit 1
-
-#   echo "===== STARTING NEXTJS APP ====="
-#   if [[ "${APP_BUILD}" = "dev" ]]; then
-#       echo "======== Running in Dev Mode ===="
-#       yarn dev > ${APP_LOG_FILE} 2>&1 &
-#       echo $!
-#   elif [[  "${APP_BUILD}" = "prod" ]]; then
-#       echo "======== Running in Production Mode ===="
-
-#       yarn build
-#       yarn start > ${APP_LOG_FILE} 2>&1 &
-#       exit_status=$?
-#       echo "exit_status ${exit_status}"
-#   fi
-
-#   cd - || exit 1
 }
 
 start_app(){
@@ -204,7 +220,6 @@ start_app(){
    yarn install
    yarn build
 
-   #export FOO=BARBAR;
    echo "===== STARTING NEXTJS APP ====="
    if [[ "${APP_BUILD}" = "dev" ]]; then
        echo "======== Running in Dev Mode ===="
@@ -231,13 +246,14 @@ run_docker_influx(){
    echo "======== Installing Influxdbv2 Docker ===="
    echo "============ building local docker image ====="
    cd ${PRJ_ROOT}/scripts || exit
-   sudo docker pull ${INFLUX_DOCKER_IMAGE}
-   sudo docker build -t ${INFLUX_DOCKER_LOCAL_IMAGE} .
+   docker pull ${INFLUX_DOCKER_IMAGE}
+   docker build -t ${INFLUX_DOCKER_LOCAL_IMAGE} .
+
    cd - || exit
    echo "============ starting local docker container ====="
    mkdir -p ${INFLUX_LOG_DIR}
    echo "[$(date +"%d.%m.%Y %T")] starting docker instance ${INFLUX_INSTANCE_NAME}"
-   sudo docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_LOCAL_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
+   docker run --name ${INFLUX_INSTANCE_NAME} --publish 8086:8086 ${INFLUX_DOCKER_LOCAL_IMAGE} > ${INFLUX_LOG_FILE} 2>&1 &
    echo "[$(date +"%d.%m.%Y %T")] started instance $INFLUX_INSTANCE_NAME listening at port 8086."
    echo "logfile at $INFLUX_LOG_FILE"
    # TODO better wait for Influx to start
@@ -257,7 +273,7 @@ setup_docker_influx(){
   echo "INFLUX_USERNAME ${INFLUX_USERNAME}"
   echo "INFLUX_ORG ${INFLUX_ORG}"
   echo "INFLUX_BUCKET ${INFLUX_BUCKET}"
-  sudo docker exec influx2_solo influx setup -u ${INFLUX_USERNAME} -p ${INFLUX_PASSWORD} \
+  docker exec influx2_solo influx setup -u ${INFLUX_USERNAME} -p ${INFLUX_PASSWORD} \
                                -o ${INFLUX_ORG} -b ${INFLUX_BUCKET} -t ${INFLUX_TOKEN} -f
   exit_status=$?
   echo ${exit_status}
@@ -265,8 +281,8 @@ setup_docker_influx(){
 
 stop_docker_influx(){
    echo "======== Stopping Influxdbv2 Docker ===="
-   sudo docker stop ${INFLUX_INSTANCE_NAME}
-   sudo docker rm ${INFLUX_INSTANCE_NAME}
+   docker stop ${INFLUX_INSTANCE_NAME}
+   docker rm ${INFLUX_INSTANCE_NAME}
 }
 
 build_data_module(){
@@ -295,8 +311,10 @@ add_data_module_to_tests(){
 }
 
 remove_data_module(){
+  echo "======== Removing Data Module from App ===="
   cd ${PRJ_ROOT}/app || echo "Failed to cd to ${PRJ_ROOT}/app"
   yarn remove giraffe-cypress-data
+  echo "======== Removing Data Module from Tests ===="
   cd ${PRJ_ROOT}/tests || echo "Failed to cd to ${PRJ_ROOT}/tests"
   yarn remove giraffe-cypress-data
 }
@@ -326,7 +344,7 @@ usage(){
    echo "Setup the Giraffe test application framework"
    echo ""
    echo "Commands:"
-   echo "   create    Create the application. Do everything.  Default command."
+   echo "   create    Create the application. Do everything."
    echo "   clean     Clean the application"
    echo "   shutdown  Shutdown the application"
    echo "   start     Start the NextJS application - but not backend"
@@ -335,6 +353,7 @@ usage(){
    echo "   data      Rebuild data module    "
    echo "   influx    Reset influx docker backend"
    echo "   reporting Setup linked directories for cypress reporting - used in test scripts"
+   echo "   help      Show this message. Default command."
    echo ""
    echo "Options:"
    echo "   -d | --dist    Giraffe distribution to use ('local', local build | 'release', node release)"
@@ -369,6 +388,10 @@ while [ "$1" != "" ]; do
                        ;;
       restart )        ACTION="restart"
                        ;;
+      help | --help | -h )  ACTION="usage"
+                       ;;
+      check )          ACTION="check"
+                       ;;
       -d | --dist )    shift
                        DIST=$1
                        ;;
@@ -401,8 +424,7 @@ done
 
 echo "DIST $DIST"
 
-# TODO - check whether Giraffe Package is to be from Current Github w. branch e.g. file:/...
-# Or whether Giraffe Package is to be the released package - once GeoWidget is released
+check_env
 
 case $ACTION in
    create )      echo "====== Creating App ======"
@@ -433,6 +455,10 @@ case $ACTION in
                  add_data_module_to_app
                  add_data_module_to_tests
                  ;;
+   usage)        usage
+                 ;;
+   # Just run check_env above and exit
+   check )       ;;
    * )           echo "Unhandled Action $ACTION"
 esac
 

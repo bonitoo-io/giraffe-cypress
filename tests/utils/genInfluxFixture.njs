@@ -1,6 +1,7 @@
-#!./node_modules/.bin/ts-node
-import * as fs from 'fs'
-//TODO - remove this script if it is no longer being used
+#!/usr/bin/env node
+/* eslint-disable */
+
+const fs = require('fs');
 
 //copy data source files to fixtures - to avoid hacking cypress to reach data dirs outside tests module
 try {
@@ -37,7 +38,7 @@ const fixture = {};
 lines.forEach((line) => {
     if (line.trim().startsWith('export')) {
         const keyVal = line.trim().split(' ')[1].split('=');
-        fixture[[keyVal[0].split('_')[1].toLowerCase()] as unknown as string] = keyVal[1];
+        fixture[[keyVal[0].split('_')[1].toLowerCase()]] = keyVal[1];
     }
 });
 
