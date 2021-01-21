@@ -22,9 +22,14 @@ interface Dico {
 const iVars: Dico = getInfluxEnvars();
 let sourceFile = 'sources/futuroscope01.lp'
 let interval = "";
+let timeDif = "-0s";
 let argv = process.argv;
 argv.shift();
 argv.shift()
+if(argv.length === 0){
+    usage();
+    process.exit(0)
+}
 while(argv.length > 0){
     switch(argv[0]){
         case '-s':
@@ -37,11 +42,30 @@ while(argv.length > 0){
             argv.shift();
             interval = argv[0]
             break;
+        case '-t':
+        case '--timedif':
+            argv.shift();
+            timeDif = argv[0]
+            break;
         default:
-            console.error(`Unknown argument ${argv[0]}`);
+            console.error(`Unknown argument ${argv[0]}\n`);
+            usage();
             process.exit(1);
     }
     argv.shift()
+}
+
+function usage(){
+    console.log('\nDataGen.ts -s [sourcefile] --timeDif [TimeDifference] --interval [TimeInterval]')
+    console.log('')
+    console.log('The purpose of DataGen.ts is to add the timestamps and write the data from a sourcefile to an influxdb bucket')
+    console.log('Influxdb connect properties are read from ../scripts/influx_env.sh')
+    console.log('\nparameters:\n')
+    console.log('  -s|--source     - source file containing preliminary line protocol data')
+    console.log('  -t|--timedif    - time difference from now from when to start writing data e.g. -1440m')
+    console.log('  -i|--interval   - time interval between data points, e.g. 40m')
+    console.log('')
+    console.log('Preliminary line protocol data is line protocol data missing final timestamps.')
 }
 
 export function getIVar(key: string){
@@ -103,7 +127,8 @@ const lines = data.split('\n');
 
 if(interval.length !== 0){
 
-    addStaggerTimestampToRecs(lines, '-1800s', interval).then(async (lines) =>{
+    if(timeDif === '-0s'){timeDif = '-1800s'}
+    addStaggerTimestampToRecs(lines, timeDif, interval).then(async (lines) =>{
 
         lines.forEach((line) => {
             console.log("DEBUG line: " + line);
@@ -123,7 +148,8 @@ if(interval.length !== 0){
     });
 }else{
 
-    addTimestampToRecs(lines, '-30m').then(async (lines) =>{
+    if(timeDif === '-0s'){timeDif = '-30m'}
+    addTimestampToRecs(lines, timeDif).then(async (lines) =>{
 
         lines.forEach((line) => {
             console.log("DEBUG line: " + line);
