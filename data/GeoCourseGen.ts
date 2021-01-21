@@ -89,6 +89,7 @@ function usage(){
     console.log('   -dlon  - destination longitude')
     console.log('   -step  - step in degrees longitude between waypoints (default 10)')
     console.log('   -o     - output file for line protocol data, if omitted data is written to STDOUT');
+    console.log('   -id    - set \'id\' tag value for all datapoints.  Default(geoQA)')
     console.log('')
 }
 
