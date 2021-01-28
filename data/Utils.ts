@@ -287,16 +287,24 @@ export function calcCourseWayPoints(constX: number,
     let result: GeoPoint[] = [];
     let startLonNorm = start.lonRad < 0 ? start.lonRad + ( 2 * Math.PI) : start.lonRad;
     let destLonNorm = dest.lonRad < 0 ? dest.lonRad + ( 2 * Math.PI ) : dest.lonRad;
-    let deltaLon = destLonNorm - startLonNorm;
+    let deltaLon = destLonNorm - startLonNorm; // N.B. ABS(deltaLon) should not be > PI
+    console.log('DEBUG deltaLon ' + deltaLon)
+    deltaLon = Math.abs(deltaLon) < Math.PI ? deltaLon : deltaLon > 0 ? deltaLon - (Math.PI * 2) : deltaLon + (Math.PI * 2)
+    console.log('DEBUG deltaLon ' + deltaLon)
     let deltaLat = start.latRad - dest.latRad;
     let lonDir = deltaLon > 0; // + moving east, - moving west
     let latDir = deltaLat > 0; // + moving south, - moving north
     let eORn = deltaLon === 0 ? latDir : lonDir;
 
-//    console.log(`DEBUG startLonNorm ${startLonNorm} destLonNorm ${destLonNorm}`)
+    console.log(`DEBUG startLonNorm ${startLonNorm} destLonNorm ${destLonNorm}`)
 
     if(eORn){
-//        console.log(`DEBUG moving eORn`)
+        console.log(`DEBUG moving eORn`)
+        console.log(`DEBUG dif deltaLon ${deltaLon} > destLonNorm ${destLonNorm} ${deltaLon > destLonNorm}`)
+        if(Math.abs(deltaLon) > Math.abs(destLonNorm)){
+            console.log('Crossing Meridian')
+            destLonNorm += Math.PI * 2;
+        }
         //Moving east or north
         for(let pLon = startLonNorm; pLon <= destLonNorm; pLon += deg2Rad(stepDegree) ){
             let tmpLat = calcWaypointLat(pLon, constX, constK);
@@ -305,7 +313,11 @@ export function calcCourseWayPoints(constX: number,
                 lonDecDeg: rad2Deg(tmpLon), latDecDeg: rad2Deg(tmpLat)})
         }
     }else{
-//        console.log(`DEBUG moving wORs`)
+        console.log(`DEBUG moving wORs`)
+        if(Math.abs(deltaLon) < Math.abs(destLonNorm)){
+            console.log('Crossing Meridian')
+            destLonNorm -= Math.PI * 2
+        }
         //Moving west or south
         for(let pLon = startLonNorm; pLon >= destLonNorm; pLon -= deg2Rad(stepDegree) ){
             let tmpLat = calcWaypointLat(pLon, constX, constK);
