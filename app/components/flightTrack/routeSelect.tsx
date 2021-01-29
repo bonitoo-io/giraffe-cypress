@@ -94,6 +94,12 @@ function RouteSelect() {
                    <input type="radio" value="FBK2ASK,45,-45" id="fbk2ask"
                           onChange={handleChange} name="route"/>
                    <label>FBK-&gt;ASK</label>
+                   <input type="radio" value="BUA2BJN,0,-60" id="bua2bjn"
+                          onChange={handleChange} name="route"/>
+                   <label>BUA-&gt;BJN</label>
+                   <input type="radio" value="SPM2KGL,0,0" id="spm2kgl"
+                          onChange={handleChange} name="route"/>
+                   <label>SPM-&gt;KGL</label>
                </form>
                 <p>Selected route is <em>{route}</em></p>
                 <div>
