@@ -1,26 +1,23 @@
 import Head from 'next/head'
 
 import dynamic from "next/dynamic";
-import {API_GET_PARAM_TEST_TYPE_VALUES, fetchQuery} from "../../../api/influx/query";
 
-const GaugeMini = dynamic(() => {return import('../../../../components/GaugeMini')},{ssr: false});
+const GaugeMiniBullet = dynamic(() => {return import('../../../../components/miniGauge/GaugeMiniBullet')},{ssr: false});
 
-let data = [];
+const fluxQuery = `from(bucket:"qa") |> range(start: -3h) |> filter(fn: (r) => r["_measurement"] == "weather")`
+const selectedColumns = '_value,_field,location'
 
 export async function getServerSideProps(){
 
-    const res = await fetchQuery(API_GET_PARAM_TEST_TYPE_VALUES.gauge_mini)
+    const res = await fetch(`http://localhost:3000/api/influx/query2?fluxq=${fluxQuery}&selectc=${selectedColumns}`);
 
-    console.log("DEBUG GeoTest res XXX " + res);
-
-    //const data = {}
     const data = await res.json();
 
-    console.log("DEBUG GeoTest getServerSideProps Data XXX: " + JSON.stringify(data));
     return {props: {data} }
 }
 
 export default function Home({ data }){
+    console.log('DEBUG Home data ' + JSON.stringify(data))
     return(
         <div>
             <Head>
@@ -29,7 +26,7 @@ export default function Home({ data }){
                 <section style={{height:"608px", width: "608px" }}>
                     <p>Minigauge</p>
                     <div style={{height: "600px", width: "600px", position: "absolute", top: 0, left: 0}}>
-                        <GaugeMini data={data}/>
+                        <GaugeMiniBullet data={data}/>
                     </div>
 
                 </section>

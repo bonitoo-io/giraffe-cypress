@@ -97,6 +97,8 @@ export default async function handler(req, res) {
         fluxQuery += "  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")"
     }
 
+    console.log(`DEBUG fluxQuery ${fluxQuery}`)
+
 
     let fluxRes = await DataUtil.Client.query({url: process.env.INFLUX_URL,
         token: process.env.INFLUX_TOKEN,
