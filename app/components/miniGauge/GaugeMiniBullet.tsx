@@ -30,7 +30,7 @@ const createColumns = (minValue: number, maxValue: number, fields: number) => {
 /** return field name for given index */
 export const gaugeMiniTableGetField = (i: number) => `_field_${i}`
 
-export const gaugeMiniTable = memoizeOne(
+const gaugeMiniTable = memoizeOne(
     (minValue: number, maxValue: number, fields: number): Table => {
         createColumns(minValue, maxValue, fields)
         return newTable(numberOfRecords * fields)
