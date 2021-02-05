@@ -6,7 +6,7 @@ const GaugeMiniProgress = dynamic(() => {return import('../../../../components/m
 const GaugeMiniProgressControl = dynamic(() => {return import('../../../../components/miniGauge/GaugeMiniProgressControl')},{ssr: false});
 
 
-const fluxQuery = `from(bucket: "qa")  |> range(start: -1h)  |> filter(fn: (r) => r["_measurement"] == "battery")  |> filter(fn: (r) => r["_field"] == "charge")`
+const fluxQuery = `from(bucket: "qa")  |> range(start: -2h)  |> filter(fn: (r) => r["_measurement"] == "battery")  |> filter(fn: (r) => r["_field"] == "charge")`
 const selectedColumns = '_value,_field,droid'
 
 export async function getServerSideProps(){

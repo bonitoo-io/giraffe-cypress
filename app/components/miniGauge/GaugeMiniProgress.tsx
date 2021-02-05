@@ -122,10 +122,13 @@ function GaugeMiniProgress({data, count}) {
         barsDefinitions: {
             groupByColumns: {_field: true},
         },
+        valueFontColorOutside: "#eeee44",
+        valueFontColorInside: InfluxColors.DeepPurple,
         labelBarsEnabled: true,
         labelMain: 'R2D2',
         labelMainFontColor: '#000000',
         labelMainFontSize: 32,
+        axesSteps: undefined,
         type: 'gauge mini',
         } as GaugeMiniLayerConfig ],
     }
@@ -142,7 +145,20 @@ function GaugeMiniProgress({data, count}) {
             labelMain: 'C3PO',
             labelMainFontColor: '#000000',
             labelMainFontSize: 32,
+            gaugeMiniColors: [
+                {value: 0, type: 'min', hex: "#ff4444"} as any,
+                {value: 25, type: 'threshold', hex: "#ff6666"},
+                {value: 50, type: 'threshold', hex: "#ffcc55"},
+                {value: 75, type: 'threshold', hex: "#99ff66"},
+                {value: 90, type: 'threshold', hex: "#44ff66"},
+                {value: 100, type: 'max', hex: "#44ff88"},
+            ],
+            valueFontColorInside: "#0000FF",
+            valueFontColorOutside: "#88ccFF",
             type: 'gauge mini',
+            axesFontColor: '#FF4444',
+            gaugeRounding: 10,
+            valueRounding: 10
         } as GaugeMiniLayerConfig ],
     }
 
@@ -158,6 +174,19 @@ function GaugeMiniProgress({data, count}) {
             labelMain: 'HAL9000',
             labelMainFontColor: '#000000',
             labelMainFontSize: 32,
+            gaugeMiniColors: [
+                {value: 0, type: 'min', hex: "#222222"} as any,
+                {value: 25, type: 'threshold', hex: "#555555"},
+                {value: 50, type: 'threshold', hex: "#888888"},
+                {value: 70, type: 'threshold', hex: "#aaaaaa"},
+                {value: 90, type: 'threshold', hex: "#ffffff"},
+                {value: 100, type: 'max', hex: "#ffffff"},
+            ],
+            valueFontColorInside: "#000000",
+            valueFontColorOutside: "#cccccc",
+            textMode: 'left',
+            axesSteps: 1,
+            axesFontColor: '#000000',
             type: 'gauge mini',
         } as GaugeMiniLayerConfig ],
     }

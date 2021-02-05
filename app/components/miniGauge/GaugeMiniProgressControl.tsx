@@ -10,9 +10,16 @@ function GaugeMiniProgressControl ({data}) {
 
     return(
         <div>
-            <div><form>
-                <input type="button" id='charger' value="charge"
-                       onClick={() => setStep((step + 1) % 10)} />
+            <div><form style={{fontSize: "24px"}}>
+                <button type="button" id='charger' value="charge"
+                       onClick={() => setStep((step + 1) % 10)}
+                       style={{fontSize: "24px",
+                           backgroundColor: "#880088",
+                           color: "#ffffff",
+                           borderRight: "3pt solid #440044",
+                           borderBottom: "3pt solid #440044",
+                           borderTop: "3pt solid #ff88ff",
+                           borderLeft: "3pt solid #ff88ff"}}>CHARGE</button>
                 <span>&nbsp;Step {step}</span>
             </form>
             </div>
