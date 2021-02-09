@@ -4,6 +4,10 @@
   "reporterOptions": {
     "configFile": "reporters.json"
   },
+  "trashAssetsBeforeRuns": true,
+  "env": {
+    "failSilently": false
+  },
   "viewportHeight": 768,
   "viewportWidth": 1024
 }
