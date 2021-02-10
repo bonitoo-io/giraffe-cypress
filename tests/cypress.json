@@ -8,6 +8,8 @@
   "env": {
     "failSilently": false
   },
+  "imageExpectedDir": "./cypress/fixtures/images/minigauge",
+  "imageActualDir": "compare",
   "viewportHeight": 768,
   "viewportWidth": 1024
 }
