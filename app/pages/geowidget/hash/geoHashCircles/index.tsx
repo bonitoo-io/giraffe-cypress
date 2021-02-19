@@ -2,6 +2,7 @@ import Head from 'next/head'
 
 import dynamic from 'next/dynamic'
 
+
 //const GeoHashCircles = dynamic(() => {return import('../../../../components/geohash/geohashCircles')},{ssr: false});
 const GeoHashControlCircles = dynamic(() => {return import('../../../../components/geohash/geoHashControlCircles')},{ssr: false});
 

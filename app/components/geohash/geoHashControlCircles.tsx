@@ -48,14 +48,14 @@ function GeoHashControlCircles(){
     let i = 1;
     const TR = ({row}) => (
 
-        <tr style={{textAlign: 'left'}} key={i}>
-            <td key={i}>{i++}</td>
-            <td key={row._time}>&nbsp;{row._time}&nbsp;</td>
-            {row.s2_cell_id && <td key={row.s2_cell_id}>&nbsp;{row.s2_cell_id}&nbsp;</td>}
-            {row.lat && <td key={row.lat}>&nbsp;{row.lat}&nbsp;</td>}
-            {row.lon && <td key={row.lon}>&nbsp;{row.lon}&nbsp;</td>}
-            <td key={row.mag}>&nbsp;{row.mag}&nbsp;</td>
-            <td key={row.dur}>&nbsp;{row.dur}&nbsp;</td>
+        <tr style={{textAlign: 'left'}} key={i} id={'row_' + i}>
+            <td key={i}>{i}</td>
+            <td key={row._time} id={`timestamp_${i}`}>&nbsp;{row._time}&nbsp;</td>
+            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`}>&nbsp;{row.s2_cell_id}&nbsp;</td>}
+            {row.lat && <td key={row.lat} id={`lat_${i}`}>&nbsp;{row.lat}&nbsp;</td>}
+            {row.lon && <td key={row.lon} id={`lon_${i}`}>&nbsp;{row.lon}&nbsp;</td>}
+            <td key={row.mag} id={`mag_${i}`}>&nbsp;{row.mag}&nbsp;</td>
+            <td key={row.dur} id={`dur_${i++}`}>&nbsp;{row.dur}&nbsp;</td>
         </tr>
     )
 
@@ -113,7 +113,7 @@ function GeoHashControlCircles(){
                 <select style={{height: "30px", width: "250px",
                 fontFamily: "monospace", fontSize: "12pt", padding: "3px"}}
                 onChange={handleChange}
-                value='latlon'>
+                value={grid}>
                     <option value='latlon'>ISO 6709 (Lat/Lon) dec.</option>
                     <option value='s2'>S2 - Geometry</option>
                 </select>
