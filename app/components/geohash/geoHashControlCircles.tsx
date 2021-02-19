@@ -121,10 +121,10 @@ function GeoHashControlCircles(){
                 <DepthItemsSelector vals = {S2Depths} />
                 </span>
             </div>
-            <div style={{height: "600px", width: "600px", position: "absolute", top: 80, left: 10}}>
+            <div style={{height: "600px", width: "600px", position: "absolute", top: 120, left: 10}}>
                <GeoHashCircles data={data} />
             </div>
-            <div style={{position: "absolute", width: 700, top: 110, left: 700}}>
+            <div style={{position: "absolute", width: 700, top: 120, left: 700}}>
             {data[0] ?
                 <Table data={data}/> : <p><strong>No Data</strong></p>}
             </div>
