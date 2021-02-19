@@ -1,0 +1,42 @@
+select.gircypDepth {
+    font-family: "monospace";
+    font-size: 12pt;
+    width: 50px;
+    margin-left: 10px
+}
+
+label.gircyp {
+    font-weight: bold
+}
+
+select.gircypMode {
+    height: 30px;
+    width: 250px;
+    font-family: "monospace";
+    font-size: 12pt;
+    padding: 3px;
+    margin-left: 10px;
+    margin-right: 10px
+}
+
+
+table.gircyp, th.gircyp, td.gircyp{
+    border: 1px solid black;
+    border-collapse: collapse
+}
+
+table.gircyp {
+    margin-top: 20px
+}
+
+th.gircyp, td.gircyp {
+    padding-left: 7px;
+    padding-right: 7px;
+    font-family: monospace;
+    font-size: 12pt
+}
+
+tr.gircyp:nth-child(even) {
+    background-color: #d4d7dd;
+}
+

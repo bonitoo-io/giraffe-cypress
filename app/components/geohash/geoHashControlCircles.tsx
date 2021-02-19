@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 
 import dynamic from 'next/dynamic'
 import {makeInfluxReq} from '../utils/Utils'
+import styles from './geoHashControlCircles.module.css'
 
 const GeoHashCircles = dynamic(() => {return import('./geohashCircles')},{ssr: false});
 
@@ -48,29 +49,29 @@ function GeoHashControlCircles(){
     let i = 1;
     const TR = ({row}) => (
 
-        <tr style={{textAlign: 'left'}} key={i} id={'row_' + i}>
-            <td key={i}>{i}</td>
-            <td key={row._time} id={`timestamp_${i}`}>&nbsp;{row._time}&nbsp;</td>
-            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`}>&nbsp;{row.s2_cell_id}&nbsp;</td>}
-            {row.lat && <td key={row.lat} id={`lat_${i}`}>&nbsp;{row.lat}&nbsp;</td>}
-            {row.lon && <td key={row.lon} id={`lon_${i}`}>&nbsp;{row.lon}&nbsp;</td>}
-            <td key={row.mag} id={`mag_${i}`}>&nbsp;{row.mag}&nbsp;</td>
-            <td key={row.dur} id={`dur_${i++}`}>&nbsp;{row.dur}&nbsp;</td>
+        <tr style={{textAlign: 'left'}} key={i} id={'row_' + i} className={styles.gircyp}>
+            <td key={i} className={styles.gircyp}>{i}</td>
+            <td key={row._time} id={`timestamp_${i}`} className={styles.gircyp}>{row._time}</td>
+            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`} className={styles.gircyp}>{row.s2_cell_id}</td>}
+            {row.lat && <td key={row.lat} id={`lat_${i}`} className={styles.gircyp}>{row.lat}</td>}
+            {row.lon && <td key={row.lon} id={`lon_${i}`} className={styles.gircyp}>{row.lon}</td>}
+            <td key={row.mag} id={`mag_${i}`} className={styles.gircyp}>{row.mag}</td>
+            <td key={row.dur} id={`dur_${i++}`} className={styles.gircyp}>{row.dur}</td>
         </tr>
     )
 
     let rowCount = 0;
     const Table = ({data}) => (
-        <table>
+        <table className={styles.gircyp}>
             <thead>
             <tr>
-                <th key='head'>Recs</th>
-                <th>Timestamp</th>
-                {data[0].s2_cell_id && <th>S2</th>}
-                {data[0].lat && <th>Lat</th>}
-                {data[0].lon && <th>Lon</th>}
-                <th>Mag</th>
-                <th>Dur</th>
+                <th key='head' className={styles.gircyp}>Recs</th>
+                <th className={styles.gircyp}>Timestamp</th>
+                {data[0].s2_cell_id && <th className={styles.gircyp}>S2</th>}
+                {data[0].lat && <th className={styles.gircyp}>Lat</th>}
+                {data[0].lon && <th className={styles.gircyp}>Lon</th>}
+                <th className={styles.gircyp}>Mag</th>
+                <th className={styles.gircyp}>Dur</th>
             </tr>
             </thead>
             <tbody style={{fontFamily: "monospace"}}>
@@ -89,9 +90,9 @@ function GeoHashControlCircles(){
         )
 
         return(
-            <select style={{fontFamily: "monospace", fontSize: "12pt", width: "50px"}}
-                    onChange={handleDepth}
+            <select onChange={handleDepth}
                     value={depth}
+                    className={styles.gircypDepth}
             >
                 {depthItems}
             </select>
@@ -107,26 +108,23 @@ function GeoHashControlCircles(){
     return(
         <div>
             <div style={{height: "20px", width: "600px", position: "absolute", top: 10, left: 10}}>
-                <p>Map With Circles</p>
-                <p>Currently using {grid} with depth of {depth}</p>
-                <label>Discrete Global Grid System</label>
-                <select style={{height: "30px", width: "250px",
-                fontFamily: "monospace", fontSize: "12pt", padding: "3px"}}
+                <h3>Map With Circles</h3>
+                <label className={styles.gircyp}>Discrete Global Grid System</label>
+                <select className={styles.gircypMode}
                 onChange={handleChange}
                 value={grid}>
                     <option value='latlon'>ISO 6709 (Lat/Lon) dec.</option>
                     <option value='s2'>S2 - Geometry</option>
                 </select>
-                <label>&nbsp;S2 depth</label>
+                <label className={styles.gircyp}>S2 depth</label>
                 <span style={{fontFamily: "monospace", fontSize: "12px"}}>
                 <DepthItemsSelector vals = {S2Depths} />
                 </span>
-                <p>Showing</p>
             </div>
-            <div style={{height: "600px", width: "600px", position: "absolute", top: 130, left: 10}}>
+            <div style={{height: "600px", width: "600px", position: "absolute", top: 80, left: 10}}>
                <GeoHashCircles data={data} />
             </div>
-            <div style={{position: "absolute", top: 800, left: 10}}>
+            <div style={{position: "absolute", width: 700, top: 110, left: 700}}>
             {data[0] ?
                 <Table data={data}/> : <p><strong>No Data</strong></p>}
             </div>
