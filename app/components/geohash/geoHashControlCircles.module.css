@@ -40,3 +40,9 @@ tr.gircyp:nth-child(even) {
     background-color: #d4d7dd;
 }
 
+a.gircyp {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+

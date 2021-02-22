@@ -46,15 +46,19 @@ function GeoHashControlCircles(){
         fetchData(depth, gridMode);
     }
 
+    const handleCoordClick = (ev) => {
+        alert('TBD')
+    }
+
     let i = 1;
     const TR = ({row}) => (
 
         <tr style={{textAlign: 'left'}} key={i} id={'row_' + i} className={styles.gircyp}>
             <td key={i} className={styles.gircyp}>{i}</td>
             <td key={row._time} id={`timestamp_${i}`} className={styles.gircyp}>{row._time}</td>
-            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`} className={styles.gircyp}>{row.s2_cell_id}</td>}
-            {row.lat && <td key={row.lat} id={`lat_${i}`} className={styles.gircyp}>{row.lat}</td>}
-            {row.lon && <td key={row.lon} id={`lon_${i}`} className={styles.gircyp}>{row.lon}</td>}
+            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`} className={styles.gircyp} data-testid={'s2_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.s2_cell_id}</a></td>}
+            {row.lat && <td key={row.lat} id={`lat_${i}`} className={styles.gircyp} data-testid={'lat_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.lat}</a></td>}
+            {row.lon && <td key={row.lon} id={`lon_${i}`} className={styles.gircyp} data-testid={'lon_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.lon}</a></td>}
             <td key={row.mag} id={`mag_${i}`} className={styles.gircyp}>{row.mag}</td>
             <td key={row.dur} id={`dur_${i++}`} className={styles.gircyp}>{row.dur}</td>
         </tr>
@@ -62,7 +66,7 @@ function GeoHashControlCircles(){
 
     let rowCount = 0;
     const Table = ({data}) => (
-        <table className={styles.gircyp}>
+        <table className={styles.gircyp} data-testid={'table-data-inspect'}>
             <thead>
             <tr>
                 <th key='head' className={styles.gircyp}>Recs</th>
@@ -86,13 +90,14 @@ function GeoHashControlCircles(){
     function DepthItemsSelector({vals} ){
 
         const depthItems = vals.map((val) =>
-            <option key={val.toString()} value={val}>{val}</option>
+            <option key={val.toString()} value={val} data-testid={'s2depth-' + val}>{val}</option>
         )
 
         return(
             <select onChange={handleDepth}
                     value={depth}
                     className={styles.gircypDepth}
+                    data-testid={'select-s2depth'}
             >
                 {depthItems}
             </select>
@@ -112,16 +117,18 @@ function GeoHashControlCircles(){
                 <label className={styles.gircyp}>Discrete Global Grid System</label>
                 <select className={styles.gircypMode}
                 onChange={handleChange}
-                value={grid}>
-                    <option value='latlon'>ISO 6709 (Lat/Lon) dec.</option>
-                    <option value='s2'>S2 - Geometry</option>
+                value={grid}
+                data-testid={'select-mode'}>
+                    <option value='latlon' data-testid={'mode-latlon'}>ISO 6709 (Lat/Lon) dec.</option>
+                    <option value='s2' data-testid={'mode-s2'}>S2 - Geometry</option>
                 </select>
                 <label className={styles.gircyp}>S2 depth</label>
                 <span style={{fontFamily: "monospace", fontSize: "12px"}}>
                 <DepthItemsSelector vals = {S2Depths} />
                 </span>
             </div>
-            <div style={{height: "600px", width: "600px", position: "absolute", top: 120, left: 10}}>
+            <div style={{height: "600px", width: "600px", position: "absolute", top: 120, left: 10}}
+            data-testid={'geowidget-hash-cirlces'}>
                <GeoHashCircles data={data} />
             </div>
             <div style={{position: "absolute", width: 700, top: 120, left: 700}}>
