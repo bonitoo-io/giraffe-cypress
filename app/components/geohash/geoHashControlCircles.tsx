@@ -51,43 +51,6 @@ function GeoHashControlCircles(){
         alert('TBD')
     }
 
-/*    let i = 1;
-    const TR = ({row}) => (
-
-        <tr style={{textAlign: 'left'}} key={i} id={'row_' + i} className={styles.gircyp}>
-            <td key={i} className={styles.gircyp}>{i}</td>
-            <td key={row._time} id={`timestamp_${i}`} className={styles.gircyp}>{row._time}</td>
-            {row.s2_cell_id && <td key={row.s2_cell_id} id={`s2_${i}`} className={styles.gircyp} data-testid={'s2_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.s2_cell_id}</a></td>}
-            {row.lat && <td key={row.lat} id={`lat_${i}`} className={styles.gircyp} data-testid={'lat_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.lat}</a></td>}
-            {row.lon && <td key={row.lon} id={`lon_${i}`} className={styles.gircyp} data-testid={'lon_' + i}><a className={styles.gircyp} onClick={handleCoordClick}>{row.lon}</a></td>}
-            <td key={row.mag} id={`mag_${i}`} className={styles.gircyp}>{row.mag}</td>
-            <td key={row.dur} id={`dur_${i++}`} className={styles.gircyp}>{row.dur}</td>
-        </tr>
-    )
-
-    let rowCount = 0;
-    const Table = ({data}) => (
-        <table className={styles.gircyp} data-testid={'table-data-inspect'}>
-            <thead>
-            <tr>
-                <th key='head' className={styles.gircyp}>Recs</th>
-                <th className={styles.gircyp}>Timestamp</th>
-                {data[0].s2_cell_id && <th className={styles.gircyp}>S2</th>}
-                {data[0].lat && <th className={styles.gircyp}>Lat</th>}
-                {data[0].lon && <th className={styles.gircyp}>Lon</th>}
-                <th className={styles.gircyp}>Mag</th>
-                <th className={styles.gircyp}>Dur</th>
-            </tr>
-            </thead>
-            <tbody style={{fontFamily: "monospace"}}>
-            {data.map((row) => (
-
-                <TR row={row} key={rowCount++}/>
-                ))}
-            </tbody>
-        </table>
-    ) */
-
     function DepthItemsSelector({vals} ){
 
         const depthItems = vals.map((val) =>
