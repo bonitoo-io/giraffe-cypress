@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react";
 
 import dynamic from 'next/dynamic'
 import {makeInfluxReq} from '../utils/Utils'
-import styles from './geoHashControlCircles.module.css'
+import DataTable from '../utils/DataTable'
+import styles from '../styles/giraffeCypress.module.css'
 
 const GeoHashCircles = dynamic(() => {return import('./geohashCircles')},{ssr: false});
 
@@ -50,7 +51,7 @@ function GeoHashControlCircles(){
         alert('TBD')
     }
 
-    let i = 1;
+/*    let i = 1;
     const TR = ({row}) => (
 
         <tr style={{textAlign: 'left'}} key={i} id={'row_' + i} className={styles.gircyp}>
@@ -85,7 +86,7 @@ function GeoHashControlCircles(){
                 ))}
             </tbody>
         </table>
-    )
+    ) */
 
     function DepthItemsSelector({vals} ){
 
@@ -133,7 +134,7 @@ function GeoHashControlCircles(){
             </div>
             <div style={{position: "absolute", width: 700, top: 120, left: 700}}>
             {data[0] ?
-                <Table data={data}/> : <p><strong>No Data</strong></p>}
+                <DataTable data={data} handleCoordClick={handleCoordClick}/> : <p><strong>No Data</strong></p>}
             </div>
 
         </div>

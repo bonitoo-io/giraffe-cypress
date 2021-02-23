@@ -44,5 +44,6 @@ a.gircyp {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+    font-weight: bold;
 }
 
