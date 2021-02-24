@@ -49,8 +49,8 @@ function GiraffeGeoMarkerCenter({data}){
     const [location, setLocation] = useState({lat: latitude, lon: longitude})
     const [zoom, setZoom] = useState(8);
 
-    console.log("DEBUG GeoTest data " + data);
-    console.log("DEBUG fromRows " + JSON.stringify(fromRows(data)))
+    //console.log("DEBUG GeoTest data " + data);
+    //console.log("DEBUG fromRows " + JSON.stringify(fromRows(data)))
 
     const handleRecenter = (ev) => {
         setLocation({lat: latitude, lon: longitude})
@@ -112,8 +112,6 @@ function GiraffeGeoMarkerCenter({data}){
         ],
     }
 
-    //TODO - send select to reusable utilities - see select in geohashControlCircles as well
-    //TODO - button to reset zoom as well
     return(
         <PlotContainer>
             <Plot config={config} />
@@ -133,10 +131,8 @@ function GiraffeGeoMarkerCenter({data}){
             <div style={{position: "absolute", width: 700, top: 0, left: 640}}>
                 <div><div className={styles.gircypTooltip}>
                     <span className={styles.gircypTooltipText}>Reset to initial values <br/> {latitude} : {longitude}</span>
-                    <button onClick={handleRecenter} >Recenter</button></div>
-
-
-                    <label>Zoom </label><SelectIntegers start={1}
+                    <button data-testid={'btn-recenter'} onClick={handleRecenter} style={{padding: "5px", marginLeft: '5px', marginRight: '5px'}} >Recenter</button></div>
+                    <label style={{marginLeft: "10px"}}>Zoom </label><SelectIntegers start={1}
                                                         end={18}
                                                         value={zoom}
                                                         handleSelect={handleZoom}/>
