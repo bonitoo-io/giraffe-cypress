@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     })
 */
 
-    console.log("DEBUG result " + result);
+    //console.log("DEBUG result " + result);
     //let testTable : Table = fromRows(result)
 
 

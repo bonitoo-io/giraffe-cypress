@@ -19,10 +19,10 @@ const now = Date.now();
 
 const latitude = 46.6671;
 const longitude = 0.3700;
+const s2Default = '47fdbccd2b1';
 
 const tileServerConfiguration = {
     tileServerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-//    tileServerUrl: 'https://tile.openstreetmap.org/7/63/42.png',
     // bingKey:
     //   'AtqWbnKXzGMWSAsgWknAw2cgBKuGIm9XmSbaS4fSebC5U6BdDTUF3I__u5NAp_Zi',
 }
@@ -48,12 +48,14 @@ function GiraffeGeoMarkerCenter({data}){
 
     const [location, setLocation] = useState({lat: latitude, lon: longitude})
     const [zoom, setZoom] = useState(8);
-
-    //console.log("DEBUG GeoTest data " + data);
-    //console.log("DEBUG fromRows " + JSON.stringify(fromRows(data)))
+    const [s2, setS2] = useState(s2Default)
 
     const handleRecenter = (ev) => {
-        setLocation({lat: latitude, lon: longitude})
+        if(data[0]['s2_cell_id']){
+            setS2(s2Default)
+        }else {
+            setLocation({lat: latitude, lon: longitude})
+        }
     }
 
     const handleZoom = (ev) => {
@@ -64,20 +66,21 @@ function GiraffeGeoMarkerCenter({data}){
         const tid = ev.target.parentElement.id;
         let lat = location.lat;
         let lon = location.lon;
-        let s2 = 0.0;
+
         if(tid.startsWith('lat')){
             lat = parseFloat(ev.target.parentElement.innerText);
             lon = parseFloat(ev.target.parentElement.nextSibling.innerText)
+            setLocation({lat: lat, lon: lon})
         }else if(tid.startsWith('lon')){
             lat = parseFloat(ev.target.parentElement.previousSibling.innerText);
             lon = parseFloat(ev.target.parentElement.innerText)
+            setLocation({lat: lat, lon: lon})
         }else if(tid.startsWith('s2')){
-            s2 = parseFloat(ev.target.parentElement.innerText)
+            setS2(ev.target.parentElement.innerText)
         }else{
             console.error('Unhandled element id ' + tid)
         }
-        setLocation({lat: lat, lon: lon})
-       // alert(lat + " : " + lon + " (s2: " + s2 + ")")
+
     }
 
     const config: Config = {
@@ -119,7 +122,9 @@ function GiraffeGeoMarkerCenter({data}){
                 <span style={{fontSize: "16pt",
                     fontFamily: "monospace",
                     fontWeight: "bold",
-                    backgroundColor: "rgba(255, 215, 0, 0.2)"}}>lat : {location.lat}, lon: {location.lon}</span>
+                    backgroundColor: "rgba(255, 215, 0, 0.2)"}}>
+                    {data[0]['s2_cell_id'] ? <span>s2: {s2}</span> : <span>lat : {location.lat}, lon: {location.lon}</span>}
+                </span>
             </div>
             <div style={{zIndex: 999, position: "absolute", right: 50, top: 100}}>
                 <span style={{fontSize: "16pt",
@@ -130,7 +135,9 @@ function GiraffeGeoMarkerCenter({data}){
 
             <div style={{position: "absolute", width: 700, top: 0, left: 640}}>
                 <div><div className={styles.gircypTooltip}>
-                    <span className={styles.gircypTooltipText}>Reset to initial values <br/> {latitude} : {longitude}</span>
+                    <span className={styles.gircypTooltipText}>Reset to initial value <br/>{data[0]['s2_cell_id'] ?
+                        <span>{s2}</span> :
+                        <span> {latitude} : {longitude}</span>}</span>
                     <button data-testid={'btn-recenter'} onClick={handleRecenter} style={{padding: "5px", marginLeft: '5px', marginRight: '5px'}} >Recenter</button></div>
                     <label style={{marginLeft: "10px"}}>Zoom </label><SelectIntegers start={1}
                                                         end={18}
@@ -143,7 +150,6 @@ function GiraffeGeoMarkerCenter({data}){
         </PlotContainer>
 
     )
-
 }
 
 export default GiraffeGeoMarkerCenter;

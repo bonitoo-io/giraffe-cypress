@@ -1,7 +1,7 @@
 select.gircypDepth {
     font-family: "monospace";
     font-size: 12pt;
-    width: 50px;
+    width: 64px;
     margin-left: 10px
 }
 
@@ -63,7 +63,7 @@ a.gircyp {
     border-radius: 6px;
 
     position: absolute;
-    top: 22px;
+    top: 30px;
     left: 20px;
     z-index: 1;
 }

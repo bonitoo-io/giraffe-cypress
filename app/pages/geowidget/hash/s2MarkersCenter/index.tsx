@@ -6,10 +6,9 @@ const GiraffeGeoMarkerCenter = dynamic(() => {return import('../../../../compone
 
 export async function getServerSideProps(){
 
-    const res = await fetch(`http://localhost:3000/api/influx/query`)
-
+    const res = await fetch(`http://localhost:3000/api/influx/query2?fluxq=import "experimental/geo" from(bucket: "qa")  |> range(start: -2h)  |> filter(fn: (r) => r["_measurement"] == "myGis")  |> map(fn: (r) => ({ r with lat: float(v: r.lat)}))  |> map(fn: (r) => ({ r with lon: float(v: r.lon)}))  |> geo.shapeData(latField: "lat", lonField: "lon", level: 22)&selectc=dur,mag,s2_cell_id`)
+    //const data = {}
     const data = await res.json();
-
     return {props: {data} }
 }
 

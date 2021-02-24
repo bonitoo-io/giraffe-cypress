@@ -10,7 +10,7 @@ function SelectIntegers({start, end, value,
         vals.push(i);
     }
 
-    const depthItems = vals.map((val) =>
+    const items = vals.map((val) =>
         <option key={val.toString()} value={val} data-testid={'opt-' + val}>{val}</option>
     )
 
@@ -20,7 +20,7 @@ function SelectIntegers({start, end, value,
                 className={styles.gircypDepth}
                 data-testid={'select-ints'}
         >
-            {depthItems}
+            {items}
         </select>
     )
 }
