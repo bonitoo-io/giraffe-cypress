@@ -141,7 +141,8 @@ function GiraffeGeoMarkerCenter({data}){
                                                         value={zoom}
                                                         handleSelect={handleZoom}/>
                 </div>
-                <DataTable data={data} handleCoordClick={handleCoordClick} />
+                {data[0] ? <DataTable data={data} handleCoordClick={handleCoordClick} /> :
+                    <p><strong>NO DATA</strong></p> }
             </div>
         </PlotContainer>
 

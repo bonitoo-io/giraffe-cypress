@@ -30,7 +30,7 @@ describe('GeoWidget - S2 - Map with Circles', () => {
         cy.get('[data-testid=s2_1]').scrollIntoView().should('have.text','47f934d2a3cb');
         cy.get('[data-testid=s2_3]').scrollIntoView().should('have.text', '4807303260c9');
         cy.get('[data-testid=s2_5]').scrollIntoView().should('have.text','47fda9e43c2b');
-        cy.get('[data-testid=select-s2depth]').select('4');
+        cy.get('[data-testid=select-ints]').select('4');
 
         //TODO better wait
         cy.wait(500)
@@ -39,7 +39,7 @@ describe('GeoWidget - S2 - Map with Circles', () => {
         cy.get('[data-testid=s2_3]').should('have.text', '481');
         cy.get('[data-testid=s2_5]').should('have.text', '47f');
 
-        cy.get('[data-testid=select-s2depth]').select('10');
+        cy.get('[data-testid=select-ints]').select('10');
 
         //TODO better wait
         cy.wait(500)
@@ -48,7 +48,7 @@ describe('GeoWidget - S2 - Map with Circles', () => {
         cy.get('[data-testid=s2_3]').should('have.text', '480731');
         cy.get('[data-testid=s2_5]').should('have.text', '47fda9');
 
-        cy.get('[data-testid=select-s2depth]').select('22');
+        cy.get('[data-testid=select-ints]').select('22');
 
         //TODO better wait
         cy.wait(500)
