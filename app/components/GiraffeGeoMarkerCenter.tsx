@@ -51,7 +51,7 @@ function GiraffeGeoMarkerCenter({data}){
     const [s2, setS2] = useState(s2Default)
 
     const handleRecenter = (ev) => {
-        if(data[0]['s2_cell_id']){
+        if(data[0] && data[0]['s2_cell_id']){
             setS2(s2Default)
         }else {
             setLocation({lat: latitude, lon: longitude})
@@ -123,7 +123,7 @@ function GiraffeGeoMarkerCenter({data}){
                     fontFamily: "monospace",
                     fontWeight: "bold",
                     backgroundColor: "rgba(255, 215, 0, 0.2)"}}>
-                    {data[0]['s2_cell_id'] ? <span>s2: {s2}</span> : <span>lat : {location.lat}, lon: {location.lon}</span>}
+                    {data[0] && data[0]['s2_cell_id'] ? <span>s2: {s2}</span> : <span>lat : {location.lat}, lon: {location.lon}</span>}
                 </span>
             </div>
             <div style={{zIndex: 999, position: "absolute", right: 50, top: 100}}>
@@ -135,7 +135,7 @@ function GiraffeGeoMarkerCenter({data}){
 
             <div style={{position: "absolute", width: 700, top: 0, left: 640}}>
                 <div><div className={styles.gircypTooltip}>
-                    <span className={styles.gircypTooltipText}>Reset to initial value <br/>{data[0]['s2_cell_id'] ?
+                    <span className={styles.gircypTooltipText}>Reset to initial value <br/>{data[0] && data[0]['s2_cell_id'] ?
                         <span>{s2}</span> :
                         <span> {latitude} : {longitude}</span>}</span>
                     <button data-testid={'btn-recenter'} onClick={handleRecenter} style={{padding: "5px", marginLeft: '5px', marginRight: '5px'}} >Recenter</button></div>
