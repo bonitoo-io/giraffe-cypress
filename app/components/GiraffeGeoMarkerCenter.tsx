@@ -10,6 +10,7 @@ import {Plot,
     GeoLayerConfig} from '@influxdata/giraffe'
 
 import DataTable from './utils/DataTable'
+import SelectIntegers from "./utils/SelectIntegers";
 import styles from './styles/giraffeCypress.module.css'
 
 import memoizeOne from "memoize-one";
@@ -135,26 +136,10 @@ function GiraffeGeoMarkerCenter({data}){
                     <button onClick={handleRecenter} >Recenter</button></div>
 
 
-                    <label>Zoom </label><select value={zoom} onChange={handleZoom}>
-                        <option value={1} key={1}>1</option>
-                        <option value={2} key={2}>2</option>
-                        <option value={3} key={3}>3</option>
-                        <option value={4} key={4}>4</option>
-                        <option value={5} key={5}>5</option>
-                        <option value={6} key={6}>6</option>
-                        <option value={7} key={7}>7</option>
-                        <option value={8} key={8}>8</option>
-                        <option value={9} key={9}>9</option>
-                        <option value={10} key={10}>10</option>
-                        <option value={11} key={11}>11</option>
-                        <option value={12} key={12}>12</option>
-                        <option value={13} key={13}>13</option>
-                        <option value={14} key={14}>14</option>
-                        <option value={15} key={15}>15</option>
-                        <option value={16} key={16}>16</option>
-                        <option value={17} key={17}>17</option>
-                        <option value={18} key={18}>18</option>
-                    </select>
+                    <label>Zoom </label><SelectIntegers start={1}
+                                                        end={18}
+                                                        value={zoom}
+                                                        handleSelect={handleZoom}/>
                 </div>
                 <DataTable data={data} handleCoordClick={handleCoordClick} />
             </div>

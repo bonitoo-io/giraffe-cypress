@@ -3,6 +3,8 @@ import React, {useState, useEffect} from "react";
 import dynamic from 'next/dynamic'
 import {makeInfluxReq} from '../utils/Utils'
 import DataTable from '../utils/DataTable'
+import SelectIntegers from '../utils/SelectIntegers'
+
 import styles from '../styles/giraffeCypress.module.css'
 
 const GeoHashCircles = dynamic(() => {return import('./geohashCircles')},{ssr: false});
@@ -14,12 +16,6 @@ function GeoHashControlCircles(){
     const [grid, setGrid] = useState('latlon')
     const [data, setData] = useState([{}])
     const [depth, setDepth] = useState(22)
-
-    const S2Depths: number[] = []
-
-    for(let i = 0; i < 21; i++){
-        S2Depths.push(i+4);
-    }
 
     const fetchData = (depth, gridMode) => {
         makeInfluxReq('GET',
@@ -51,23 +47,6 @@ function GeoHashControlCircles(){
         alert('TBD')
     }
 
-    function DepthItemsSelector({vals} ){
-
-        const depthItems = vals.map((val) =>
-            <option key={val.toString()} value={val} data-testid={'s2depth-' + val}>{val}</option>
-        )
-
-        return(
-            <select onChange={handleDepth}
-                    value={depth}
-                    className={styles.gircypDepth}
-                    data-testid={'select-s2depth'}
-            >
-                {depthItems}
-            </select>
-        )
-    }
-
     if(firstLoad){
         const gridMode = ['lat','lon']
         fetchData(depth, gridMode);
@@ -88,7 +67,7 @@ function GeoHashControlCircles(){
                 </select>
                 <label className={styles.gircyp}>S2 depth</label>
                 <span style={{fontFamily: "monospace", fontSize: "12px"}}>
-                <DepthItemsSelector vals = {S2Depths} />
+                <SelectIntegers start={4} end={24} value={depth} handleSelect={handleDepth}/>
                 </span>
             </div>
             <div style={{height: "600px", width: "600px", position: "absolute", top: 120, left: 10}}
