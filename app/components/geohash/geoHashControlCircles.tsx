@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import {makeInfluxReq} from '../utils/Utils'
 import DataTable from '../utils/DataTable'
 import SelectIntegers from '../utils/SelectIntegers'
+import SelectGridSystem from '../utils/SelectGridSystem'
 
 import styles from '../styles/giraffeCypress.module.css'
 
@@ -57,14 +58,7 @@ function GeoHashControlCircles(){
         <div>
             <div style={{height: "20px", width: "600px", position: "absolute", top: 10, left: 10}}>
                 <h3>Map With Circles</h3>
-                <label className={styles.gircyp}>Discrete Global Grid System</label>
-                <select className={styles.gircypMode}
-                onChange={handleChange}
-                value={grid}
-                data-testid={'select-mode'}>
-                    <option value='latlon' data-testid={'mode-latlon'}>ISO 6709 (Lat/Lon) dec.</option>
-                    <option value='s2' data-testid={'mode-s2'}>S2 - Geometry</option>
-                </select>
+                <SelectGridSystem value={grid} handleSelect={handleChange}/>
                 <label className={styles.gircyp}>S2 depth</label>
                 <span style={{fontFamily: "monospace", fontSize: "12px"}}>
                 <SelectIntegers start={4} end={24} value={depth} handleSelect={handleDepth}/>
