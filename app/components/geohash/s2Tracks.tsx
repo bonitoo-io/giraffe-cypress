@@ -11,6 +11,7 @@ import {Plot,
     LineLayerConfig,
     GeoLayerConfig} from '@influxdata/giraffe'
 
+// TODO resume after #480 is fixed
 
 const latitude = 46.6671;
 const longitude = 0.3700;

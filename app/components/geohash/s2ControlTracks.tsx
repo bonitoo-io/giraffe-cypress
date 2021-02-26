@@ -8,6 +8,7 @@ import SelectIntegers from '../utils/SelectIntegers'
 import S2Tracks from './s2Tracks'
 import styles from "../styles/giraffeCypress.module.css";
 
+// TODO resume after #480 is fixed
 
 /*
 *
