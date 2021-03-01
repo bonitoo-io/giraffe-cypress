@@ -10,7 +10,7 @@ describe('GeoWidget - S2 - Map with Circles', () => {
     })
 
     beforeEach('load Page', () => {
-        cy.visit('/geowidget/hash/geoHashCircles')
+        cy.visit('/geowidget/hash/s2Circles')
     })
 
     afterEach('Screenshot', () => {
