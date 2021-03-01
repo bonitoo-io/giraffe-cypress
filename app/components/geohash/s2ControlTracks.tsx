@@ -99,7 +99,7 @@ function S2ControlTracks(){
                 <label>Stay Sane (Catch S2 values before they cause exception)</label>
             </div>
         <div >
-            {data[0]['s2_cell_id'] && staySane ? <p>USING S2</p> : <div style={{height: 600, width: 600}}>
+            {data[0] && data[0]['s2_cell_id'] && staySane ? <p>USING S2</p> : <div style={{height: 600, width: 600}}>
                 {data[0] && data[0]['_time'] ? <S2Tracks data={data}/> : <p><strong>NO DATA</strong></p>}
             </div>
             }
