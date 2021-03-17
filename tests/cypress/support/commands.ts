@@ -279,6 +279,29 @@ export const saveCanvasToPNG = (path: string, index = 0) => {
     })
 }
 
+/**
+ * Note that when running headless there can be slight discrepancies between the expected(stored) image
+ * and the current screenshot.  So tolerances are used instead of 0 value exact matches.
+ *
+ * TO UPDATE EXPECTED FILES simply copy actual files into the expected directory.  See cypress.json config
+ * @param fPath1
+ * @param fPath2
+ */
+export const comparePNGFiles = (fPath1: string, fPath2: string, tolerance = {pct: 0.5, pixel: 1000}) => {
+    cy.task('compareImageFiles', {
+        file1: fPath1,
+        file2: fPath2})
+        .then((result) => {
+            console.log(`DEBUG compare Result ${JSON.stringify(result)}`)
+            if(result){
+                expect(result.pct).to.be.at.most(tolerance.pct, `${fPath1} should match ${fPath2} within a ${tolerance.pct} tolerance`);
+                expect(result.pixelDif).to.be.at.most(tolerance.pixel, `${fPath1} should match ${fPath2} within ${tolerance.pixel} pixels`);
+            }else{
+                throw 'ERROR: compareImageFiles result undefined'
+            }
+        })
+}
+
 Cypress.Commands.add("addTimestampToRecs", addTimestampToRecs);
 Cypress.Commands.add("datagenFromLPFixture", datagenFromLPFixture);
 Cypress.Commands.add("echoValue", echoValue);
@@ -292,3 +315,4 @@ Cypress.Commands.add('calcHiddenElements',calcHiddenElements)
 Cypress.Commands.add('resetDB', resetDB)
 Cypress.Commands.add('compareCanvasElementToFile', compareCanvasElementToFile)
 Cypress.Commands.add('saveCanvasToPNG', saveCanvasToPNG)
+Cypress.Commands.add('comparePNGFiles', comparePNGFiles)

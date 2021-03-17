@@ -12,7 +12,8 @@ import {
     calcVisibleElements,
     resetDB,
     compareCanvasElementToFile,
-    saveCanvasToPNG
+    saveCanvasToPNG,
+    comparePNGFiles
 } from './support/commands'
 
 declare global {
@@ -31,6 +32,7 @@ declare global {
             resetDB: typeof resetDB
             compareCanvasElementToFile: typeof compareCanvasElementToFile
             saveCanvasToPNG: typeof saveCanvasToPNG
+            comparePNGFiles: typeof comparePNGFiles
         }
     }
 }
