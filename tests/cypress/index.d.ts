@@ -13,7 +13,9 @@ import {
     resetDB,
     compareCanvasElementToFile,
     saveCanvasToPNG,
-    comparePNGFiles
+    comparePNGFiles,
+    waitFadeIn,
+    waitForLeaflet
 } from './support/commands'
 
 declare global {
@@ -33,6 +35,8 @@ declare global {
             compareCanvasElementToFile: typeof compareCanvasElementToFile
             saveCanvasToPNG: typeof saveCanvasToPNG
             comparePNGFiles: typeof comparePNGFiles
+            waitFadeIn: typeof waitFadeIn
+            waitForLeaflet: typeof waitForLeaflet
         }
     }
 }

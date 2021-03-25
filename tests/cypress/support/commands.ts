@@ -302,6 +302,42 @@ export const comparePNGFiles = (fPath1: string, fPath2: string, tolerance = {pct
         })
 }
 
+export const waitFadeIn = (subject: any) => {
+    cy.log('STARTING waitFadeIn')
+    cy.log(`DEBUG subject ${JSON.stringify(subject)}`)
+    //cy.log(`DEBUG selector ${selector}`)
+    cy.log(`DEBUG subject.selctor subject ${subject.selector}`)
+    cy.get(subject.selector).then((selected) => {
+        cy.log('DEBUG selected ' + selected.length + " " + Array.isArray(selected))
+        for(let i = 0; i < selected.length; i++) {
+            cy.log(`DEBUG i ${i}`)
+            cy.get(subject.selector).eq(i).should('have.css', 'opacity', '1')
+        }
+    })
+
+
+    cy.wrap(subject)
+
+}
+
+export const waitForLeaflet = (subject?: any) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('.leaflet-zoom-animated > img').waitFadeIn()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('.leaflet-layer').waitFadeIn()
+
+    //even the above is not reliable over 20 test runs
+    //better to have slower but more stable tests
+    cy.wait(1000)
+
+    if(subject) {
+        cy.wrap(subject)
+    }
+}
+
 Cypress.Commands.add("addTimestampToRecs", addTimestampToRecs);
 Cypress.Commands.add("datagenFromLPFixture", datagenFromLPFixture);
 Cypress.Commands.add("echoValue", echoValue);
@@ -316,3 +352,5 @@ Cypress.Commands.add('resetDB', resetDB)
 Cypress.Commands.add('compareCanvasElementToFile', compareCanvasElementToFile)
 Cypress.Commands.add('saveCanvasToPNG', saveCanvasToPNG)
 Cypress.Commands.add('comparePNGFiles', comparePNGFiles)
+Cypress.Commands.add('waitFadeIn', {prevSubject: true}, waitFadeIn)
+Cypress.Commands.add('waitForLeaflet', {prevSubject: 'optional'}, waitForLeaflet)
