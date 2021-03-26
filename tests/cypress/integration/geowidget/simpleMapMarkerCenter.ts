@@ -83,7 +83,7 @@ describe('GeoWidget - Center Map on Markers', () => {
 
         cy.get('div.geo > div').screenshot(iad +'/DynamicZoom01');
         cy.comparePNGFiles(`${ied}/simpleMapMarkerCenter/DynamicZoom01.png`,
-            `${screenshotCompareDir}/DynamicZoom01.png`)
+            `${screenshotCompareDir}/DynamicZoom01.png`, {pct: 0.5, pixel: 2000})
 
         cy.get('[data-testid=lon_3]').click() //should still be level 12
         cy.waitForLeaflet()
