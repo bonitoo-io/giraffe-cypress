@@ -3,7 +3,6 @@ import * as fs from 'fs'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {PNG} from 'pngjs'
-import {images} from 'images'
 
 import * as pixelmatch from 'pixelmatch'
 
@@ -35,7 +34,6 @@ module.exports = (on: any, config: any) => {
             let pct = 0;
             args.difFile = args.difFile ? args.difFile : './DIFF.png'
 
-            console.log(`DEBUG diffFileName ${args.difFile}`)
             const expectedImg : PNG = await parseImage(args.file1);
             const actualImg : PNG = await parseImage(args.file2);
             const diff : PNG = new PNG({
