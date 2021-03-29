@@ -3,6 +3,7 @@ import * as fs from 'fs'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {PNG} from 'pngjs'
+import {images} from 'images'
 
 import * as pixelmatch from 'pixelmatch'
 
@@ -29,11 +30,12 @@ module.exports = (on: any, config: any) => {
             console.log('fsCheck listing ' + listing)
             return listing
         },
-        async compareImageFiles(args: {file1: string, file2: string}){
+        async compareImageFiles(args: {file1: string, file2: string, difFile: string}){
             let matchedPixels = 0;
             let pct = 0;
+            args.difFile = args.difFile ? args.difFile : './DIFF.png'
 
-
+            console.log(`DEBUG diffFileName ${args.difFile}`)
             const expectedImg : PNG = await parseImage(args.file1);
             const actualImg : PNG = await parseImage(args.file2);
             const diff : PNG = new PNG({
@@ -42,9 +44,37 @@ module.exports = (on: any, config: any) => {
             });
             const actualImgAdjusted = adjustCanvas(actualImg, diff.width, diff.height)
             const expectedImgAdjusted = adjustCanvas(expectedImg, diff.width, diff.height)
-
             matchedPixels = pixelmatch(expectedImgAdjusted.data, actualImgAdjusted.data, diff.data, diff.width, diff.height, {threshold: 0.1})
+
+            const diffImage = new PNG({width: diff.width * 3, height: diff.height})
+            for(let y = 0; y < diffImage.height; y++){
+                for(let x = 0; x < diffImage.width ; x++){
+                    const idx = (((diffImage.width) * y) + x) << 2;
+                    let sidx = ((expectedImgAdjusted.width * y) + x) << 2;
+
+                    if(x <= expectedImgAdjusted.width){
+                        diffImage.data[idx] = expectedImgAdjusted.data[sidx];
+                        diffImage.data[idx + 1] = expectedImgAdjusted.data[sidx + 1]
+                        diffImage.data[idx + 2] = expectedImgAdjusted.data[sidx + 2];
+                        diffImage.data[idx + 3] = expectedImgAdjusted.data[sidx + 3];
+                    }else if(x <= (expectedImg.width + diff.width)){
+                        sidx = ((expectedImg.width * y) + (x - expectedImg.width)) << 2
+                        diffImage.data[idx] = diff.data[sidx];
+                        diffImage.data[idx + 1] = diff.data[sidx + 1]
+                        diffImage.data[idx + 2] = diff.data[sidx + 2];
+                        diffImage.data[idx + 3] = diff.data[sidx + 3];
+                    }else if(x <= (diffImage.width)){
+                        sidx = ((expectedImg.width * y) + (x - (expectedImg.width + diff.width))) << 2
+                        diffImage.data[idx] = actualImgAdjusted.data[sidx];
+                        diffImage.data[idx + 1] = actualImgAdjusted.data[sidx + 1]
+                        diffImage.data[idx + 2] = actualImgAdjusted.data[sidx + 2];
+                        diffImage.data[idx + 3] = actualImgAdjusted.data[sidx + 3];
+                    }
+                }
+            }
+
             pct = (matchedPixels / diff.width / diff.height) ** 0.5
+            fs.writeFileSync(`${args.difFile}`, PNG.sync.write(diffImage));
             return {pixelDif: matchedPixels, pct: pct};
         },
         cleanDir(dir: string){

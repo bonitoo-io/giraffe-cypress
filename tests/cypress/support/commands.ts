@@ -288,9 +288,11 @@ export const saveCanvasToPNG = (path: string, index = 0) => {
  * @param fPath2
  */
 export const comparePNGFiles = (fPath1: string, fPath2: string, tolerance = {pct: 0.5, pixel: 1000}) => {
+    const diffFile = fPath2.substr(0, fPath2.lastIndexOf('.')) + 'DIFF.png'
     cy.task('compareImageFiles', {
         file1: fPath1,
-        file2: fPath2})
+        file2: fPath2,
+        difFile: diffFile})
         .then((result) => {
             console.log(`DEBUG compare Result ${JSON.stringify(result)}`)
             if(result){
