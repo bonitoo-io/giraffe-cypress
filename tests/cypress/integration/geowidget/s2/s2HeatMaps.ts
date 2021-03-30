@@ -2,7 +2,7 @@ before(() => {
     cy.resetDB();
 })
 
-describe('GeoWidget - S2 - Map with Circles', () => {
+describe('GeoWidget - S2 - Heat Map', () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
