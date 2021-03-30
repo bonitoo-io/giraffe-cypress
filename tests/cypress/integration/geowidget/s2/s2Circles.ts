@@ -10,7 +10,7 @@ describe('GeoWidget - S2 - Map with Circles', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const iad = Cypress.config("imageActualDir");
-    const defaultWait = 1000;
+
     const screenshotCompareDir = `./cypress/screenshots/geowidget/s2/s2Circles.ts/${iad}`
 
 
