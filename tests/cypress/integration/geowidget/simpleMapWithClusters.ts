@@ -85,12 +85,12 @@ describe('GeoWidget - Basic - Marker Clusters', () => {
 
     it('shows cluster polygons', () => {
         cy.wait(1000)
-        cy.get(' g > path').should('not.be.visible')
+        cy.get(' g > path').should('not.exist')
         for(let i = 0; i < 8; i++){
             cy.get('.marker-cluster-custom').eq(i).trigger('mouseover')
             cy.get(' g > path').should('be.visible')
             cy.get('.marker-cluster-custom').eq(i).trigger('mouseout')
-            cy.get(' g > path').should('not.be.visible')
+            cy.get(' g > path').should('not.exist')
         }
     })
 
